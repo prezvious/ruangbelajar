@@ -1,0 +1,11 @@
+{
+  "name": "ruangbelajar",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "node --env-file=.env.local dev-server.js"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

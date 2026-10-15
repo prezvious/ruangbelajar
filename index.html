@@ -11,11 +11,13 @@
   <link rel="stylesheet" href="/styles.css">
   <link rel="stylesheet" href="/themes.css">
   <link rel="stylesheet" href="/tracker.css">
+  <link rel="stylesheet" href="/auth.css">
   <script src="/data.js" defer></script>
   <script src="/icons.js" defer></script>
   <script src="/tracker-data.js" defer></script>
   <script src="/tracker.js" defer></script>
   <script src="/app.js" defer></script>
+  <script src="/auth-client.js" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Langsung ke agenda</a>
@@ -36,6 +38,7 @@
       <a href="/tracker" class="tracker-shortcut" id="tracker-count">0 / 116 materi tuntas</a>
       <a class="source-credit" href="/panduan">Kurikulum oleh TTL Indonesia<span data-icon="right"></span></a>
     </div>
+    <div class="account-control" id="account-control"><a href="/sign-in">Masuk ke akun</a></div>
   </aside>
   <div class="workspace">
     <header class="topbar"><div class="breadcrumb"><span data-icon="layout"></span><span>Ruang belajar</span><span class="breadcrumb-divider" data-icon="right" aria-hidden="true"></span><strong id="page-label">Agenda belajar</strong></div><label class="theme-control"><span>Warna</span><span class="theme-select-wrap"><select id="theme-select" aria-label="Kombinasi warna"><option value="olive">Olive</option><option value="ocean">Ocean</option><option value="terracotta">Terracotta</option><option value="plum">Plum</option></select><span class="theme-chevron" data-icon="right" aria-hidden="true"></span></span></label></header>

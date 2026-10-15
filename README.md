@@ -6,8 +6,9 @@ Ruang Belajar menyatukan jadwal dan progres belajar dalam satu aplikasi web ring
 Materi tersusun per minggu, setiap submateri memiliki tahap Belajar, Latihan, dan
 Review, sementara hasil tryout dapat dicatat untuk melihat perkembangan nilai.
 
-Dibangun dengan **HTML, CSS, dan JavaScript biasa**: tanpa framework, backend,
-atau proses build. Data pengguna disimpan di browser melalui `localStorage`.
+Dibangun dengan **HTML, CSS, dan JavaScript biasa**, tanpa framework atau proses
+build. Autentikasi memakai **Supabase Auth** melalui Vercel Function Node.js.
+Progres belajar tetap disimpan di browser melalui `localStorage`.
 
 ## Sekilas
 
@@ -35,18 +36,19 @@ atau proses build. Data pengguna disimpan di browser melalui `localStorage`.
 
 ## Menjalankan Secara Lokal
 
-Prasyarat: **Node.js dan npm** untuk menjalankan server statis lokal.
-Aplikasi sendiri tidak memerlukan instalasi dependensi atau kompilasi.
+Prasyarat: **Node.js 22+ dan npm**. Tidak ada dependensi yang perlu diinstal.
 
 ~~~sh
 git clone https://github.com/prezvious/ruangbelajar.git
 cd ruangbelajar
-npx serve . --single --listen 5173
+cp .env.example .env.local
+# Isi AUTH_COOKIE_SECRET di .env.local dengan string acak minimal 32 karakter.
+npm run dev
 ~~~
 
-Buka **http://localhost:5173**. Pada penggunaan pertama, `npx` dapat meminta
-izin mengunduh paket `serve`. Opsi `--single` menyediakan fallback ke
-`index.html` saat membuka atau me-refresh halaman seperti `/tracker`.
+Buka **http://localhost:5174**. Server lokal melayani halaman aplikasi dan
+`/api/auth`; server statis seperti `serve` tidak menjalankan API autentikasi.
+Panduan konfigurasi dan pengujian email tersedia di [AUTH.md](AUTH.md).
 
 > Gunakan server HTTP, bukan membuka `index.html` melalui `file://`.
 > Navigasi berbasis path memerlukan server yang melayani halaman aplikasi.
@@ -72,6 +74,9 @@ minggu kalender, dan agenda tidak menetapkan durasi atau tanggal ujian.
 | `/tracker` | Tracker tahap belajar |
 | `/tryout` | Riwayat dan grafik hasil tryout |
 | `/panduan` | Referensi pendahuluan dan petunjuk penggunaan |
+| `/sign-in` | Masuk dengan email dan kata sandi |
+| `/sign-up` | Daftar dengan nama lengkap, email, dan kata sandi |
+| `/auth/verify` | Konfirmasi email dari tautan Supabase dan kirim ulang tautan |
 
 Tautan `/tracker?subject=PK` membuka tracker dengan filter Pengetahuan
 Kuantitatif. Filter menggunakan query parameter, bukan hash.
@@ -86,11 +91,13 @@ ini bukan routing halaman dan tidak ditambahkan ke URL ketika diklik.
 2. Impor repository **prezvious/ruangbelajar**.
 3. Pilih **Framework Preset: Other** dan **Root Directory: `.`**.
 4. Biarkan **Build Command** kosong dan gunakan direktori proyek (`.`)
-   sebagai **Output Directory**. Tidak ada langkah `npm install` yang diperlukan.
-5. Klik **Deploy**.
+   sebagai **Output Directory**. Vercel menjalankan `api/auth.js` sebagai Function.
+5. Tambahkan `AUTH_COOKIE_SECRET` dan `PUBLIC_SITE_URL` pada environment Vercel,
+   lalu atur redirect Supabase sesuai [AUTH.md](AUTH.md).
+6. Klik **Deploy**.
 
-Konfigurasi `vercel.json` menyertakan rewrite untuk lima halaman selain
-agenda, sehingga tautan langsung dan refresh tetap memuat `index.html`.
+Konfigurasi `vercel.json` menyertakan rewrite untuk halaman aplikasi dan akun,
+sehingga tautan langsung serta refresh tetap memuat dokumen yang sesuai.
 Aset CSS, JavaScript, dan favicon memakai path absolut dari root domain.
 Proyek ditujukan untuk root domain, bukan subfolder seperti `/aplikasi/`.
 
@@ -100,8 +107,16 @@ repository ini tidak menetapkan domain produksi tertentu.
 
 ## Penyimpanan Dan Privasi
 
-Semua progres disimpan di **browser dan origin yang sama**, bukan di server.
-Tidak ada akun pengguna atau sinkronisasi antarperangkat.
+Progres belajar disimpan di **browser dan origin yang sama**, bukan di server.
+Akun tersedia melalui Supabase, tetapi belum menyinkronkan progres antarperangkat
+atau memisahkan progres lokal berdasarkan akun. Jangan gunakan browser bersama
+untuk menyimpan profil atau hasil belajar yang bersifat pribadi.
+
+Sesi akun memakai cookie terenkripsi `HttpOnly`, `SameSite=Lax`, dan `Secure`
+di Vercel. Batas absolut sesi adalah **6 bulan kalender**, atau **12 bulan** jika
+**Remember me** dicentang; refresh token tidak memperpanjang batas tersebut.
+Penghapusan cookie, kebijakan browser, pencabutan sesi, atau pengaturan Supabase
+dapat membuat pengguna keluar lebih awal. Token tidak disimpan di localStorage.
 
 | Kunci localStorage | Isi |
 | --- | --- |
@@ -146,6 +161,11 @@ belajar, bukan pengumuman resmi jadwal atau ketentuan seleksi.
 | `themes.js`, `themes.css` | Pilihan, penyimpanan, dan token palet warna |
 | `icons.js`, `favicon.svg` | Ikon Lucide lokal dan ikon situs |
 | `vercel.json` | Rewrite dan redirect untuk clean URL |
+| `auth.html`, `auth-page.js`, `auth.css` | Halaman masuk, daftar, dan verifikasi |
+| `auth-client.js` | Klien API akun dan kontrol sesi di browser |
+| `api/auth.js` | API Supabase dan cookie sesi terenkripsi |
+| `dev-server.js` | Server development lokal dengan API autentikasi |
+| `AUTH.md`, `.env.example` | Panduan dan contoh konfigurasi autentikasi |
 | `DESIGN.md` | Arah visual dan panduan desain |
 | `third_party/` | Lisensi aset pihak ketiga |
 
