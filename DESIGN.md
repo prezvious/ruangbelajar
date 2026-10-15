@@ -80,3 +80,15 @@ Theme tokens cover navigation, selected rows, progress, controls, and focus pane
 
 Theme choice persists independently of agenda and tracker data. Brand naming
 remains unchanged until the user chooses a replacement.
+
+## Account Layout
+
+Sign-in and sign-up use a centered, single-column form without a decorative
+heading icon. Keep the verification icon on the email confirmation page.
+Use available viewport height to center the form between the header and footer;
+compact spacing on short screens instead of hiding controls or clipping overflow.
+Inputs retain a 16px font and at least 44px height. Very short landscape screens,
+on-screen keyboards, enlarged text, and expanded errors may require scrolling.
+The desktop sidebar scrolls independently when the viewport cannot fit its
+navigation and account controls. Horizontal scrolling stays inside navigation,
+week selectors, subject tabs, and charts rather than the document.

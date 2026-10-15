@@ -34,7 +34,11 @@
     title.textContent = heading;
     document.title = `${heading} — Ruang Belajar`;
     description.textContent = text;
-    document.getElementById('auth-symbol').innerHTML = svg(symbol);
+    const symbolElement = document.getElementById('auth-symbol');
+    if (verification) {
+      symbolElement.hidden = false;
+      symbolElement.innerHTML = svg(symbol);
+    } else symbolElement?.remove();
   }
 
   function emailField() {
@@ -82,14 +86,14 @@
     return;
   }
 
-  setHeading(signup ? 'Buat akun belajar' : 'Selamat datang kembali', signup ? 'Daftarkan email kamu untuk membuat akun Ruang Belajar.' : 'Masuk ke akunmu dengan email dan kata sandi.', signup ? 'user-round' : 'log-in');
+  setHeading(signup ? 'Buat akun belajar' : 'Selamat datang kembali', signup ? 'Daftar dengan nama, email, dan kata sandi.' : 'Masuk dengan email dan kata sandi.');
   footer.innerHTML = signup ? 'Sudah punya akun? <a href="/sign-in">Masuk</a>' : 'Belum punya akun? <a href="/sign-up">Buat akun</a>';
   content.innerHTML = `<form class="auth-form" id="account-form">
     ${signup ? '<label class="auth-field" for="full-name">Nama lengkap<input id="full-name" name="fullName" autocomplete="name" placeholder="Nama lengkap kamu" minlength="2" maxlength="120" required></label>' : ''}
     ${emailField()}
-    <label class="auth-field" for="password">Kata sandi<span class="auth-password"><input id="password" name="password" type="password" autocomplete="${signup ? 'new-password' : 'current-password'}" placeholder="${signup ? 'Minimal 8 karakter' : 'Masukkan kata sandi'}" ${signup ? 'minlength="8"' : ''} maxlength="128" required><button type="button" id="toggle-password" aria-label="Tampilkan kata sandi" aria-pressed="false">${svg('eye')}</button></span>${signup ? '<small>Gunakan kata sandi unik yang tidak kamu pakai di situs lain.</small>' : ''}</label>
+    <label class="auth-field" for="password">Kata sandi<span class="auth-password"><input id="password" name="password" type="password" autocomplete="${signup ? 'new-password' : 'current-password'}" placeholder="${signup ? 'Minimal 8 karakter' : 'Masukkan kata sandi'}" ${signup ? 'minlength="8"' : ''} maxlength="128" required><button type="button" id="toggle-password" aria-label="Tampilkan kata sandi" aria-pressed="false">${svg('eye')}</button></span></label>
     <label class="auth-remember"><input type="checkbox" name="remember">Remember me <span>· 12 bulan</span></label>
-    <p class="auth-session-note">Tanpa pilihan ini, kamu tetap masuk selama 6 bulan. Sesi berakhir otomatis setelah batas tersebut.</p>
+    <p class="auth-session-note">Sesi berakhir setelah 6 bulan, atau 12 bulan dengan Remember me.</p>
     <button class="auth-submit" type="submit">${svg(signup ? 'user-round' : 'log-in')}${signup ? 'Buat akun' : 'Masuk'}</button>
   </form>`;
   const toggle = document.getElementById('toggle-password');
