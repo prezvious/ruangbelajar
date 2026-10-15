@@ -1,0 +1,68 @@
+:root {
+  --selected: #e9eedf;
+  --soft-accent: #e1e8d5;
+  --track: #e5e9dc;
+  --on-focus: #fafbf6;
+  --on-focus-muted: #d5dfce;
+  --on-focus-soft: #b8c7a5;
+  --control-border: #7d886f;
+  --danger: #9b3c36;
+}
+
+:root[data-theme="ocean"] {
+  --sidebar: #f5f8fa;
+  --ink: #26343b;
+  --muted: #596d75;
+  --line: #e2e9ec;
+  --olive: #3b6374;
+  --olive-dark: #233f4b;
+  --tint: #edf3f6;
+  --selected: #e3edf2;
+  --soft-accent: #d8e6ee;
+  --track: #dfe8ee;
+  --on-focus: #f8fbfd;
+  --on-focus-muted: #d2e3ec;
+  --on-focus-soft: #b5ccda;
+  --control-border: #738a96;
+}
+
+:root[data-theme="terracotta"] {
+  --sidebar: #faf7f3;
+  --ink: #342c27;
+  --muted: #766457;
+  --line: #ece5de;
+  --olive: #89553f;
+  --olive-dark: #603c2e;
+  --tint: #f7efe8;
+  --selected: #f0e3d8;
+  --soft-accent: #ead8ca;
+  --track: #ebe0d7;
+  --on-focus: #fffaf5;
+  --on-focus-muted: #eedbd0;
+  --on-focus-soft: #ddbdab;
+  --control-border: #9b7c68;
+}
+
+:root[data-theme="plum"] {
+  --sidebar: #faf7fa;
+  --ink: #302632;
+  --muted: #756479;
+  --line: #ece4ed;
+  --olive: #725575;
+  --olive-dark: #4e3851;
+  --tint: #f4eef4;
+  --selected: #ece1ed;
+  --soft-accent: #e4d5e5;
+  --track: #e9dfea;
+  --on-focus: #fff9ff;
+  --on-focus-muted: #e9d6eb;
+  --on-focus-soft: #d3b8d5;
+  --control-border: #947e98;
+}
+
+.theme-control { display: flex; align-items: center; gap: 9px; font-size: 11px; color: var(--muted); }
+.theme-select-wrap { position: relative; }
+.theme-control select { appearance: none; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); color: var(--ink); padding: 7px 28px 7px 10px; cursor: pointer; font-size: 11px; }
+.theme-chevron { position: absolute; top: 50%; right: 8px; transform: translateY(-50%) rotate(90deg); pointer-events: none; }
+.theme-chevron svg { width: 13px; height: 13px; }
+@media (max-width: 600px) { .theme-control > span:first-child { display: none; } .theme-control select { max-width: 104px; padding-left: 7px; font-size: 10px; } .topbar { gap: 10px; } .breadcrumb > span:nth-child(2), .breadcrumb-divider { display: none; } }

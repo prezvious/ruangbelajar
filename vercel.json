@@ -1,0 +1,15 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/agenda", "destination": "/", "permanent": true },
+    { "source": "/index.html", "destination": "/", "permanent": true }
+  ],
+  "rewrites": [
+    { "source": "/dasbor", "destination": "/index.html" },
+    { "source": "/materi", "destination": "/index.html" },
+    { "source": "/tracker", "destination": "/index.html" },
+    { "source": "/tryout", "destination": "/index.html" },
+    { "source": "/panduan", "destination": "/index.html" }
+  ]
+}

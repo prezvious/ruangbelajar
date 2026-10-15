@@ -1,0 +1,25 @@
+{
+  "name": "Ruang Belajar",
+  "platform": "web",
+  "direction": "Quiet editorial study workspace",
+  "colors": {
+    "canvas": "#ffffff",
+    "sidebar": "#f8f9f5",
+    "ink": "#292d25",
+    "muted": "#6a6f63",
+    "line": "#e9ebe4",
+    "olive": "#4d5d3c",
+    "oliveDark": "#39472e",
+    "tint": "#f0f3e9"
+  },
+  "typography": {
+    "display": "Lora, Georgia, serif",
+    "body": "DM Sans, sans-serif"
+  },
+  "layout": {
+    "sidebarWidth": 235,
+    "mainMaxWidth": 1320,
+    "mobileBreakpoint": 600,
+    "stackedAgendaBreakpoint": 820
+  }
+}
