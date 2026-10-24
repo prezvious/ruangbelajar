@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
+import { newState } from '../study/core.mjs';
 const { chromium } = await (process.argv[2]
   ? import(pathToFileURL(process.argv[2]).href)
   : import('@playwright/test'));
@@ -33,6 +34,11 @@ try {
   let user = null,
     row = null,
     signupFields;
+  const guestState = newState();
+  guestState.academic.week = 4;
+  guestState.academic.completed = ['2-0'];
+  guestState.academic.profile.name = 'Pemilik data tamu';
+  guestState.academic.progress['math-4'] = [true, false, false];
   await context.addInitScript(() => {
     addEventListener(
       'DOMContentLoaded',
@@ -78,23 +84,12 @@ try {
       json: { ...(row || { data: null, revision: 0 }), context },
     });
   });
-  await context.addInitScript(() => {
+  await context.addInitScript((state) => {
     if (!localStorage.getItem('fixture-seeded')) {
-      localStorage.setItem(
-        'ruang-belajar-v1',
-        JSON.stringify({ week: 4, completed: ['2-0'] }),
-      );
-      localStorage.setItem(
-        'ruang-belajar-tracker-v1',
-        JSON.stringify({
-          profile: { name: 'Pemilik data tamu' },
-          progress: { 'math-4': [true, false, false] },
-          tryouts: [],
-        }),
-      );
+      localStorage.setItem('ruang.workspace.v3.guest', JSON.stringify(state));
       localStorage.setItem('fixture-seeded', '1');
     }
-  });
+  }, guestState);
   const page = await context.newPage();
   page.on('pageerror', (e) => errors.push(e.message));
   const url = 'http://127.0.0.1:5198';
@@ -205,7 +200,7 @@ try {
       ?.textContent.toLowerCase()
       .includes('saved'),
   );
-  await page.goto(url + '/pengaturan');
+  await page.goto(url + '/pengaturan?tab=data');
   await page.locator('[data-action="learn-storage"]').click();
   await page.locator('#modal [data-action="learn-forget"]').waitFor();
   await page.locator('#modal [data-action="learn-forget"]').click();
@@ -218,7 +213,7 @@ try {
   );
   assert.deepEqual(errors, []);
   console.log(
-    'PASS: real-browser legacy Ruang migration, localised signup with full name/remember drafts, sign-in, HttpOnly transport fixtures, explicit academic guest import, cloud save, sign-out isolation and guarded device-data removal.',
+    'PASS: real-browser saved guest workspace, localised signup with full name/remember drafts, sign-in, HttpOnly transport fixtures, explicit academic guest import, cloud save, sign-out isolation and guarded device-data removal.',
   );
 } finally {
   await browser?.close();

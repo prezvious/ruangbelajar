@@ -7,6 +7,7 @@ const workspace = require('./api/workspace.js');
 const appRoutes = new Set([
   '/',
   '/hari-ini',
+  '/jadwal',
   '/rencana',
   '/catatan',
   '/catatan-waktu',
@@ -21,7 +22,6 @@ const appRoutes = new Set([
   '/mata-pelajaran',
   '/pengaturan',
   '/akun',
-  '/migrasi',
   '/sign-in',
   '/sign-up',
 ]);
@@ -43,7 +43,6 @@ const types = {
   '.sql': 'text/plain; charset=utf-8',
 };
 publicFiles.add('supabase-schema.sql');
-publicFiles.add('MIGRATION.md');
 
 async function notFound(res) {
   res.writeHead(404, {

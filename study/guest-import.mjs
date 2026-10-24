@@ -1,74 +1,6 @@
 import { newLearning } from './learning-model.mjs';
-import {
-  newState,
-  validateState,
-  backupState,
-  hasActiveSession,
-} from './core.mjs';
-import { newAcademic, validateAcademic } from './academic-model.mjs';
+import { validateState, backupState, hasActiveSession } from './core.mjs';
 import { LocalisedError } from './i18n.mjs';
-
-export const GUEST_KEY = 'ruang.workspace.v3.guest';
-const LEGACY_KEYS = [
-  'ruang-belajar-v1',
-  'ruang-belajar-tracker-v1',
-  'ruang-belajar-theme-v1',
-];
-export function legacyRuang(storage) {
-  const raw = Object.fromEntries(
-    LEGACY_KEYS.map((key) => [key, storage.getItem(key)]),
-  );
-  if (Object.values(raw).every((x) => x === null)) return null;
-  const agenda = raw[LEGACY_KEYS[0]] ? JSON.parse(raw[LEGACY_KEYS[0]]) : {};
-  const tracker = raw[LEGACY_KEYS[1]] ? JSON.parse(raw[LEGACY_KEYS[1]]) : {};
-  if (
-    !agenda ||
-    typeof agenda !== 'object' ||
-    Array.isArray(agenda) ||
-    !tracker ||
-    typeof tracker !== 'object' ||
-    Array.isArray(tracker)
-  )
-    throw new LocalisedError('error.unreadable');
-  const next = newState();
-  next.timer.runId = 'legacy-ruang';
-  next.academic = validateAcademic({
-    ...newAcademic(),
-    ...tracker,
-    week: agenda.week ?? 2,
-    completed: agenda.completed ?? [],
-  });
-  if (['olive', 'ocean', 'terracotta', 'plum'].includes(raw[LEGACY_KEYS[2]]))
-    next.settings.themeKey = raw[LEGACY_KEYS[2]];
-  return { state: validateState(next), raw };
-}
-export function migrateLocalRuang(storage) {
-  const current = storage.getItem(GUEST_KEY);
-  if (current !== null)
-    return { state: validateState(JSON.parse(current)), migrated: false };
-  const legacy = legacyRuang(storage);
-  if (!legacy) return { state: newState(), migrated: false };
-  // A single new write. Original bytes remain untouched in their original keys.
-  storage.setItem(GUEST_KEY, JSON.stringify(legacy.state));
-  return { ...legacy, migrated: true };
-}
-export function decodeImport(text) {
-  try {
-    const value = JSON.parse(text);
-    if (value?.format === 'ruang-belajar-legacy-v1') {
-      const map = new Map(Object.entries(value.storage || {}));
-      const legacy = legacyRuang({
-        getItem: (key) => (map.has(key) ? map.get(key) : null),
-      });
-      if (!legacy) throw new LocalisedError('error.backupFormat');
-      return legacy.state;
-    }
-    return validateState(value);
-  } catch (error) {
-    if (error instanceof LocalisedError) throw error;
-    throw new LocalisedError('error.backupFormat');
-  }
-}
 export async function importFingerprint(state) {
   const canonical = (value) =>
     Array.isArray(value)
@@ -94,12 +26,7 @@ export function mergeWorkspaces(
   target,
   source,
   fingerprint,
-  {
-    appearance = false,
-    incomingProfile = false,
-    allowActive = false,
-    now = Date.now(),
-  } = {},
+  { allowActive = false, now = Date.now() } = {},
 ) {
   const next = validateState(target),
     incoming = backupState(validateState(source), now);
@@ -241,8 +168,7 @@ export function mergeWorkspaces(
       (value, i) => value || b.progress[id][i],
     );
   for (const key of Object.keys(a.profile))
-    if (!a.profile[key] || incomingProfile)
-      a.profile[key] = b.profile[key] || a.profile[key];
+    if (!a.profile[key]) a.profile[key] = b.profile[key] || a.profile[key];
   if (!a.startDate) a.startDate = b.startDate;
   for (const [id, date] of Object.entries(b.dates))
     if (!a.dates[id]) a.dates[id] = date;
@@ -261,19 +187,7 @@ export function mergeWorkspaces(
     a.tryouts.push(record);
   }
   a.imports = [...new Set([...a.imports, ...b.imports, fingerprint])];
-  if (appearance) next.settings = { ...incoming.settings };
   next.updatedAt = now;
   // Full validation rejects overlapping time records and protects the current workspace.
   return validateState(next);
-}
-export function importSummary(state) {
-  return {
-    subjects: state.subjects.length,
-    tasks: state.tasks.length,
-    sessions: state.sessions.length,
-    completed: state.academic.completed.length,
-    stages: Object.values(state.academic.progress).flat().filter(Boolean)
-      .length,
-    tryouts: state.academic.tryouts.length,
-  };
 }

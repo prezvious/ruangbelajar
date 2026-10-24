@@ -38,6 +38,10 @@
   ],
   "rewrites": [
     {
+      "source": "/jadwal",
+      "destination": "/index.html"
+    },
+    {
       "source": "/hari-ini",
       "destination": "/index.html"
     },
@@ -107,10 +111,6 @@
     },
     {
       "source": "/akun",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/migrasi",
       "destination": "/index.html"
     }
   ]

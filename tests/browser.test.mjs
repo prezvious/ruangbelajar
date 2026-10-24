@@ -2,7 +2,6 @@ import assert from 'node:assert/strict';
 import { pathToFileURL } from 'node:url';
 import fs from 'node:fs/promises';
 import { spawn } from 'node:child_process';
-import { newState } from '../study/core.mjs';
 const { chromium } = await (process.argv[2]
   ? import(pathToFileURL(process.argv[2]).href)
   : import('@playwright/test'));
@@ -63,7 +62,7 @@ try {
     url = 'http://127.0.0.1:5197';
   await page.goto(url);
   await page.locator('h1').waitFor();
-  assert.equal(await page.locator('h1').innerText(), 'Agenda belajar');
+  assert.equal(await page.locator('h1').innerText(), 'Jadwal');
   await page.locator('.schedule-editor summary').click();
   await page.locator('[name=startDate]').fill('2026-12-28');
   await page.locator('#academic-schedule [type=submit]').click();
@@ -125,11 +124,14 @@ try {
   await page.waitForFunction(
     () => !document.querySelector('.persistent-timer'),
   );
-  await page.locator('a[href="/dasbor"]').first().click();
-  assert.deepEqual(await page.locator('.view-content h2').allTextContents(), [
-    'Profil & target',
-  ]);
-  assert.equal(await page.locator('.view-content form').count(), 0);
+  await page.goto(url + '/dasbor');
+  await page.locator('.dashboard-profile').waitFor();
+  assert.ok(
+    (await page.locator('.view-content h2').allTextContents()).includes(
+      'Profil & target',
+    ),
+  );
+  assert.equal(await page.locator('#academic-profile').count(), 0);
   assert.equal(await page.locator('.profile-summary dd').count(), 4);
   assert.equal(
     await page
@@ -152,7 +154,8 @@ try {
       JSON.parse(window.__workspaceStore.getItem('ruang.workspace.v3.guest'))
         .academic.profile.name === 'Pengguna uji',
   );
-  await page.locator('a[href="/dasbor"]').first().click();
+  await page.goto(url + '/dasbor');
+  await page.locator('.dashboard-profile').waitFor();
   assert.deepEqual(
     await page.locator('.profile-summary dd').allTextContents(),
     ['Pengguna uji', 'Universitas uji', 'Teknik Informatika', '1 Juli 2027'],
@@ -191,7 +194,8 @@ try {
     throw error;
   }
   assert.equal(await page.locator('.tryout-record').count(), 1);
-  await page.locator('a[href="/kalender"]').first().click();
+  await page.locator('.sidebar a[href="/jadwal"]').click();
+  await page.locator('.section-nav a[href="/kalender"]').click();
   await page.locator('#academic-plan-date').fill('2026-12-28');
   await page.locator('#academic-plan-date').press('Tab');
   await page.waitForFunction(() =>
@@ -204,12 +208,29 @@ try {
       'Learning How to Learn',
     ),
   );
-  await page.locator('a[href="/belajar"]').first().click();
-  await page.locator('[data-action=add-task]').click();
+  await page.locator('.sidebar .nav-item[href="/hari-ini"]').click();
+  await page.locator('[data-action=learn-task]').first().click();
   await page.locator('#modal [name=title]').fill('Tugas uji');
   await page.locator('#modal [type=submit]').click();
-  await page.locator('.task input[type=checkbox]').check();
+  try {
+    await page.locator('.task input[type=checkbox]').check({ timeout: 5000 });
+  } catch (error) {
+    console.error(
+      await page.evaluate(() => ({
+        toast: document.querySelector('#toast')?.textContent,
+        formError: document.querySelector('#modal .form-error')?.textContent,
+        taskDate: document.querySelector('#task-date')?.value,
+        tasks: JSON.parse(
+          window.__workspaceStore.getItem('ruang.workspace.v3.guest'),
+        ).tasks,
+      })),
+    );
+    throw error;
+  }
   await page.locator('a[href="/pengaturan"]').first().click();
+  await page
+    .locator('.section-nav a[href="/pengaturan?tab=appearance"]')
+    .click();
   assert.equal(await page.locator('#theme-select option').count(), 63);
   await page.locator('#theme-select').selectOption('ocean');
   await page.locator('[data-action=theme][data-value=dark]').click();
@@ -237,7 +258,6 @@ try {
     '/mata-pelajaran',
     '/pengaturan',
     '/akun',
-    '/migrasi',
   ];
   for (const locale of ['id-ID', 'en-GB', 'en-US', 'es-ES', 'fr-FR', 'ru-RU']) {
     await page.locator('#header-language-select').selectOption(locale);
@@ -255,73 +275,9 @@ try {
     }
   }
   console.log(
-    'PASS: 13 routes in six locales, dated agenda, progress, timer navigation/reload/pause, profile, tryout, calendar, tasks, 63 themes and dark/light mode.',
+    'PASS: 12 routes in six locales, dated agenda, progress, timer navigation/reload/pause, profile, tryout, calendar, tasks, 63 themes and dark/light mode.',
   );
   await page.locator('#header-language-select').selectOption('id-ID');
-  await page.goto(url + '/migrasi');
-  await page.locator('[data-action=academic-merge-file]').click();
-  const source = newState();
-  source.version = 2;
-  delete source.academic;
-  source.subjects = [
-    {
-      id: 'sela-math',
-      name: 'Matematika Sela',
-      color: '#123456',
-      archived: false,
-    },
-  ];
-  source.tasks = [
-    {
-      id: 'sela-task',
-      title: 'Tugas Sela',
-      date: '2026-10-21',
-      done: false,
-      subjectId: 'sela-math',
-    },
-  ];
-  source.sessions = [
-    {
-      id: 'sela-session',
-      runId: 'sela-run',
-      subjectId: 'sela-math',
-      start: 1600000000000,
-      end: 1600000060000,
-      durationMs: 60000,
-    },
-  ];
-  await page.locator('#academic-merge-file').setInputFiles({
-    name: 'sela-backup.json',
-    mimeType: 'application/json',
-    buffer: Buffer.from(JSON.stringify(source)),
-  });
-  await page.locator('#modal [type=submit]').waitFor();
-  const download = page.waitForEvent('download');
-  await page.locator('#modal [type=submit]').click();
-  await download;
-  await page.waitForFunction(() => !document.querySelector('#modal').open);
-  saved = await page.evaluate(async () =>
-    JSON.parse(window.__workspaceStore.getItem('ruang.workspace.v3.guest')),
-  );
-  assert.equal(saved.academic.profile.name, 'Pengguna uji');
-  assert.ok(saved.tasks.some((x) => x.id === 'sela-task'));
-  assert.ok(saved.sessions.some((x) => x.id === 'sela-session'));
-  const before = saved.sessions.length;
-  await page.locator('#academic-merge-file').setInputFiles({
-    name: 'sela-backup.json',
-    mimeType: 'application/json',
-    buffer: Buffer.from(JSON.stringify(source)),
-  });
-  await page.waitForFunction(() =>
-    document.querySelector('#toast').textContent.includes('sudah pernah'),
-  );
-  saved = await page.evaluate(async () =>
-    JSON.parse(window.__workspaceStore.getItem('ruang.workspace.v3.guest')),
-  );
-  assert.equal(saved.sessions.length, before);
-  console.log(
-    'PASS: browser merge preview, automatic backup download, Sela version-2 import, preserved Ruang data and duplicate-import protection.',
-  );
   await fs.mkdir('outputs', { recursive: true });
   for (const [name, width, height] of [
     ['desktop', 1440, 1000],

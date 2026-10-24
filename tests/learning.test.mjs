@@ -9,7 +9,7 @@ import {
   correctTime,
 } from '../study/learning-model.mjs';
 import { calendarExport } from '../study/calendar-export.mjs';
-import { mergeWorkspaces } from '../study/migration.mjs';
+import { mergeWorkspaces } from '../study/guest-import.mjs';
 import { documentOf, mergeDocuments } from '../study/sync.mjs';
 
 const s = newState();

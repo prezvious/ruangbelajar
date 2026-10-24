@@ -256,30 +256,6 @@ const rows = {
     'Les données invitées restent séparées. Fusionnez-les depuis Compte pour les ajouter à votre compte.',
     'Гостевые записи хранятся отдельно. Объедините их через раздел «Аккаунт», чтобы добавить в аккаунт.',
   ],
-  'guide.migrationTitle': [
-    'Memindahkan data dari kedua aplikasi',
-    'Move data from both apps',
-    'Move data from both apps',
-    'Trasladar datos de ambas aplicaciones',
-    'Transférer les données des deux applications',
-    'Перенос данных из обоих приложений',
-  ],
-  'guide.migrationText': [
-    'Ekspor JSON dari Pengaturan → Data di Sela Study sebelum menghapusnya. Masuk ke akun Ruang Belajar, buka Migrasi data, lalu gabungkan cadangannya. Periksa pratinjau dan hasil impor. Data Ruang pada alamat yang sama dipindahkan otomatis; untuk alamat lain, ikuti petunjuk ekspor di dokumen migrasi. Akun Sela tidak dipindahkan ke Supabase Ruang Belajar.',
-    'Export JSON from Sela Study Settings → Data before deleting it. Sign in to Ruang Belajar, open Data migration and merge the backup. Review the preview and imported records. Ruang data at the same address migrates automatically; for another address, follow the export instructions in the migration document. Sela accounts are not transferred to Ruang Belajar’s Supabase project.',
-    'Export JSON from Sela Study Settings → Data before deleting it. Sign in to Ruang Belajar, open Data migration and merge the backup. Review the preview and imported records. Ruang data at the same address migrates automatically; for another address, follow the export instructions in the migration document. Sela accounts are not transferred to Ruang Belajar’s Supabase project.',
-    'Exporta JSON desde Configuración → Datos de Sela Study antes de eliminarlo. Inicia sesión en Ruang Belajar, abre Migración de datos y combina la copia. Revisa la vista previa y los datos importados. Los datos de Ruang en la misma dirección se migran automáticamente; para otra dirección, sigue las instrucciones de exportación del documento de migración. Las cuentas de Sela no se transfieren al proyecto Supabase de Ruang Belajar.',
-    'Exportez le JSON depuis Paramètres → Données dans Sela Study avant de le supprimer. Connectez-vous à Ruang Belajar, ouvrez Migration des données et fusionnez la sauvegarde. Vérifiez l’aperçu et les données importées. Les données de Ruang à la même adresse sont migrées automatiquement ; pour une autre adresse, suivez les instructions d’exportation du document de migration. Les comptes Sela ne sont pas transférés vers le projet Supabase de Ruang Belajar.',
-    'Перед удалением Sela Study экспортируйте JSON через «Настройки → Данные». Войдите в Ruang Belajar, откройте «Перенос данных» и объедините резервную копию. Проверьте предпросмотр и импортированные записи. Данные Ruang по тому же адресу переносятся автоматически; для другого адреса следуйте инструкциям по экспорту в документе о переносе. Аккаунты Sela не переносятся в проект Supabase Ruang Belajar.',
-  ],
-  'guide.technicalDoc': [
-    'Petunjuk ekspor teknis (Bahasa Indonesia)',
-    'Technical export instructions (Indonesian)',
-    'Technical export instructions (Indonesian)',
-    'Instrucciones técnicas de exportación (indonesio)',
-    'Instructions techniques d’exportation (indonésien)',
-    'Техническая инструкция по экспорту (на индонезийском)',
-  ],
 };
 const codes = ['id-ID', 'en-GB', 'en-US', 'es-ES', 'fr-FR', 'ru-RU'];
 export const supportCatalogues = Object.fromEntries(

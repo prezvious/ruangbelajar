@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { newState } from '../study/core.mjs';
-import { mergeWorkspaces } from '../study/migration.mjs';
+import { mergeWorkspaces } from '../study/guest-import.mjs';
 import { getThemeTokens } from '../study/themes.mjs';
 import { createAcademicUI } from '../study/academic-ui.mjs';
 import { applyAcademicDraft } from '../study/academic-model.mjs';

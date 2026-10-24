@@ -1,7 +1,6 @@
 import { pollWorkspace } from './poll.mjs';
 import {
   setOccurrence,
-  taskOccurrences,
   occurrenceOn,
   assertCloudCapacity,
 } from './learning-model.mjs';
@@ -84,31 +83,18 @@ import {
   documentOf,
   sameDocument,
 } from './sync.mjs';
-import { migrateLocalRuang } from './migration.mjs';
 import { createAcademicUI } from './academic-ui.mjs';
 import { createProfileSettings } from './profile-settings.mjs';
 import { iconSet } from './icons.mjs';
+import {
+  routes,
+  primaryNavigation,
+  utilityNavigation,
+  sectionFor,
+  settingsSection,
+} from './navigation.mjs';
 import { materialStats, agendaDate, agendaItems } from './academic-model.mjs';
 
-const routes = {
-  agenda: '/',
-  today: '/hari-ini',
-  planner: '/rencana',
-  notes: '/catatan',
-  records: '/catatan-waktu',
-  dasbor: '/dasbor',
-  materi: '/materi',
-  tracker: '/tracker',
-  tryout: '/tryout',
-  panduan: '/panduan',
-  study: '/belajar',
-  stats: '/statistik',
-  calendar: '/kalender',
-  subjects: '/mata-pelajaran',
-  settings: '/pengaturan',
-  account: '/akun',
-  migrasi: '/migrasi',
-};
 const viewFromPath = () =>
   ['/sign-in', '/sign-up'].includes(location.pathname)
     ? 'account'
@@ -142,6 +128,7 @@ let memoryOnly = false,
   authPending = false,
   cloudPending = '',
   renderedView = '',
+  renderedPath = '',
   uiEpoch = 0,
   modalOpener = '',
   importEpoch = 0,
@@ -163,9 +150,10 @@ let state,
   focused = false,
   calendarToday = dayKey();
 try {
-  storedRaw = workspaceStorage.getItem(KEY);
-  state = await withStudyLock(() => migrateLocalRuang(workspaceStorage).state);
-  storedRaw = workspaceStorage.getItem(KEY);
+  state = await withStudyLock(() => {
+    storedRaw = workspaceStorage.getItem(KEY);
+    return restoreLocalState(storedRaw).state;
+  });
 } catch (e) {
   try {
     await withStudyLock(() => {
@@ -180,26 +168,8 @@ try {
     unreadableRaw = storedRaw;
     storageIssue = message('error.unreadable');
   } else {
-    let original;
-    try {
-      original = Object.fromEntries(
-        [
-          'ruang-belajar-v1',
-          'ruang-belajar-tracker-v1',
-          'ruang-belajar-theme-v1',
-        ].map((k) => [k, localStorage.getItem(k)]),
-      );
-    } catch {}
-    if (original && Object.values(original).some((x) => x !== null)) {
-      unreadableRaw = JSON.stringify({
-        format: 'ruang-belajar-legacy-v1',
-        storage: original,
-      });
-      storageIssue = message('error.unreadable');
-    } else {
-      memoryOnly = true;
-      storageIssue = message('error.storageUnavailable');
-    }
+    memoryOnly = true;
+    storageIssue = message('error.storageUnavailable');
   }
 }
 const iconNames = {
@@ -442,22 +412,7 @@ function timerCard() {
     chosen = subject(timer.subjectId),
     running = timer.startedAt !== null,
     hasSubjects = state.subjects.some((x) => !x.archived);
-  return `<section class="panel timer-panel ${running ? 'running' : ''}" aria-labelledby="timer-heading"><div class="panel-top"><h2 id="timer-heading">${ht('timer.heading')}</h2>${button('focus', '', focused ? 'close' : 'expand', 'icon-btn', `aria-label="${ht(focused ? 'timer.exitFocus' : 'timer.focus')}" title="${ht('timer.focus')}"`)}</div><div class="timer-center"><label class="timer-subject">${dot(chosen)}<select id="timer-subject" aria-label="${ht('timer.subject')}" ${hasActiveSession(state) || !hasSubjects ? 'disabled' : ''}>${hasSubjects ? subjectOptions(timer.subjectId) : `<option>${ht('timer.choosePrompt')}</option>`}</select></label><div class="timer-digits" data-live="timer" aria-label="${ht('timer.elapsed')}">${formatClock(elapsed(state))}</div><p class="timer-status" data-live="status">${ht(!hasSubjects ? 'timer.empty' : running ? 'timer.runningHint' : hasActiveSession(state) ? 'timer.pausedHint' : 'timer.readyHint')}</p><div class="timer-actions">${hasSubjects ? button('toggle-timer', t(running ? 'timer.pause' : hasActiveSession(state) ? 'timer.resume' : 'timer.start'), running ? 'pause' : 'play', 'primary', `data-running="${running}" data-run-id="${timer.runId}"`) : button('add-subject', t('subjects.add'), 'plus', 'primary')}${button('finish', t('timer.finish'), 'stop', 'quiet', `data-run-id="${timer.runId}" ${!hasActiveSession(state) ? 'disabled' : ''}`)}</div></div><div class="timer-bottom"><span class="status-dot ${running ? 'live' : ''}"></span><span>${ht(running ? 'timer.running' : hasActiveSession(state) ? 'timer.paused' : 'timer.ready')}</span><span>${ht('timer.stopwatch')}</span></div></section>`;
-}
-function tasksCard() {
-  const tasks = taskOccurrences(state, taskDate, taskDate),
-    visible = tasks.filter((x) => taskFilter !== 'active' || !x.done),
-    done = tasks.filter((x) => x.done).length;
-  return `<section class="panel tasks-panel"><div class="panel-top"><h2>${taskDate === dayKey() ? ht('tasks.today') : ht('tasks.dateHeading', { date: formatCivilDate(taskDate, { day: 'numeric', month: 'short' }) })}</h2><span class="pill">${ht('tasks.progress', { done, total: tasks.length })}</span></div><div class="task-filter"><div class="tabs"><button data-action="task-filter" data-value="all" aria-pressed="${taskFilter === 'all'}">${ht('tasks.all')}</button><button data-action="task-filter" data-value="active" aria-pressed="${taskFilter === 'active'}">${ht('tasks.active')}</button></div>${dateField('task-date', '', taskDate, t('tasks.date'))}</div><div class="task-list">${
-    visible.length
-      ? visible
-          .map((x) => {
-            const s = subject(x.subjectId);
-            return `<div class="task ${x.done ? 'done' : ''}"><label><input type="checkbox" data-task="${esc(x.id)}" data-occurrence-date="${x.date}" ${x.done ? 'checked' : ''}><span class="check-box">${icon('check')}</span><span class="task-copy"><span>${esc(x.title)}</span><small>${s ? dot(s) + esc(s.name) : ht('tasks.independent')}</small></span></label><div class="task-tools">${button('edit-task', '', 'edit', 'icon-btn', `data-id="${x.id}" aria-label="${ht('tasks.editNamed', { title: x.title })}"`)}${button('delete-task', '', 'trash', 'icon-btn', `data-id="${x.id}" aria-label="${ht('tasks.deleteNamed', { title: x.title })}"`)}</div></div>`;
-          })
-          .join('')
-      : `<div class="empty">${icon('list')}<p>${ht(tasks.length ? 'tasks.completeEmpty' : 'tasks.empty')}</p><small>${ht(tasks.length ? 'tasks.break' : 'tasks.first')}</small></div>`
-  }</div>${button('add-task', t('tasks.add'), 'plus', 'add-row')}</section>`;
+  return `<section class="panel timer-panel ${running ? 'running' : ''}" aria-labelledby="timer-heading"><div class="panel-top"><h2 id="timer-heading">${ht('timer.heading')}</h2><a class="text-button" href="/mata-pelajaran">${ht('subjects.manage')}</a>${button('focus', '', focused ? 'close' : 'expand', 'icon-btn', `aria-label="${ht(focused ? 'timer.exitFocus' : 'timer.focus')}" title="${ht('timer.focus')}"`)}</div><div class="timer-center"><label class="timer-subject">${dot(chosen)}<select id="timer-subject" aria-label="${ht('timer.subject')}" ${hasActiveSession(state) || !hasSubjects ? 'disabled' : ''}>${hasSubjects ? subjectOptions(timer.subjectId) : `<option>${ht('timer.choosePrompt')}</option>`}</select></label><div class="timer-digits" data-live="timer" aria-label="${ht('timer.elapsed')}">${formatClock(elapsed(state))}</div><p class="timer-status" data-live="status">${ht(!hasSubjects ? 'timer.empty' : running ? 'timer.runningHint' : hasActiveSession(state) ? 'timer.pausedHint' : 'timer.readyHint')}</p><div class="timer-actions">${hasSubjects ? button('toggle-timer', t(running ? 'timer.pause' : hasActiveSession(state) ? 'timer.resume' : 'timer.start'), running ? 'pause' : 'play', 'primary', `data-running="${running}" data-run-id="${timer.runId}"`) : button('add-subject', t('subjects.add'), 'plus', 'primary')}${button('finish', t('timer.finish'), 'stop', 'quiet', `data-run-id="${timer.runId}" ${!hasActiveSession(state) ? 'disabled' : ''}`)}</div></div><div class="timer-bottom"><span class="status-dot ${running ? 'live' : ''}"></span><span>${ht(running ? 'timer.running' : hasActiveSession(state) ? 'timer.paused' : 'timer.ready')}</span><span>${ht('timer.stopwatch')}</span></div></section>`;
 }
 function subjectRows(a, compact = false) {
   const items = state.subjects
@@ -565,8 +520,9 @@ function heatmapCard(full = false) {
     )}</div></div>${heatMode !== 'contributions' ? `<div class="period-nav">${button('heat-prev', '', 'arrow', 'icon-btn', `aria-label="${ht('calendar.previous')}"`)}<strong>${heatMode === 'month' ? fmtDate(start, { month: 'long', year: 'numeric' }) : formatDateRange(from, addDays(from, 6))}</strong>${button('heat-next', '', 'arrow', 'icon-btn forward', `aria-label="${ht('calendar.next')}"`)}</div>` : ''}${grid}<div class="heatmap-footer"><span data-live="heat-total">${heatMode === 'contributions' ? ht('calendar.trail') : ht(heatMode === 'week' ? 'calendar.weekTotal' : 'calendar.monthTotal', { duration: formatDuration(heatMode === 'week' ? weekTotal : all.total) })}</span><div class="legend"><span>${ht('calendar.less')}</span>${[0, 1, 2, 3, 4].map((i) => `<span class="heat-sample l${i}"></span>`).join('')}<span>${ht('calendar.more')}</span></div></div>${full ? `<div class="calendar-info">${ht('calendar.help')}</div>` : ''}</section>`;
 }
 function studyView() {
-  const a = aggregate(state, dayKey(), dayKey());
-  return `${statCards(a)}<div class="study-grid">${timerCard()}${tasksCard()}</div><div class="bottom-grid">${heatmapCard()}<section class="panel subjects-panel" data-today-subjects><div class="panel-top"><h2>${ht('summary.today')}</h2>${button('nav', t('subjects.manage'), '', 'text-button', 'data-view="subjects"')}</div>${subjectRows(a, true)}<div class="panel-note"><span data-live="session-count">${ht('count.sessions', { count: a.count })}</span> · ${ht('stats.longest')} <span data-live="max-focus">${formatDuration(a.max)}</span></div></section></div>`;
+  const a = aggregate(state, dayKey(), dayKey()),
+    target = state.academic.profile.targetDate;
+  return `<div class="daily-target"><span>${ht('a.target')}: ${target ? esc(formatCivilDate(target)) : ht('a.profileEmpty')}</span><a href="/pengaturan">${ht('nav.profile')}</a></div>${statCards(a)}<div class="study-grid">${timerCard()}${learning.render('today')}</div>`;
 }
 function range() {
   const d = parseDay(dayKey(cursor));
@@ -582,17 +538,7 @@ function statsView() {
     a = aggregate(state, dayKey(from), dayKey(to)),
     days = [];
   for (let d = from; d <= to; d = addDays(d, 1)) days.push(d);
-  const max = Math.max(3600000, ...Object.values(a.days)),
-    sessions = allSessions(state)
-      .filter((x) => x.end > +from && x.start < +addDays(to, 1))
-      .map((x) => ({
-        ...x,
-        periodMs: Math.max(
-          0,
-          Math.min(x.end, +addDays(to, 1)) - Math.max(x.start, +from),
-        ),
-      }))
-      .sort((a, b) => b.start - a.start);
+  const max = Math.max(3600000, ...Object.values(a.days));
   return `<div class="page-toolbar"><div class="tabs">${[
     ['day', 'stats.daily'],
     ['week', 'stats.weekly'],
@@ -613,16 +559,7 @@ function statsView() {
             return `<button class="bar-column" data-action="day-detail" data-date="${dayKey(d)}" aria-label="${ht('calendar.dayLabel', { date: fmtDate(d), time: formatDuration(ms) })}" title="${esc(fmtDate(d))}: ${formatDuration(ms)}"><span class="bar" style="height:${(ms / max) * 100}%;min-height:${ms ? 4 : 0}px"></span><span class="bar-label">${period === 'week' ? fmtDate(d, { weekday: 'short' }) : formatNumber(d.getDate())}</span></button>`;
           })
           .join('')}</div></div>`
-  }<div class="panel-note">${ht('stats.activeDays', { count: Object.keys(a.days).length })}</div></section><section class="panel"><div class="panel-top"><h2>${ht('stats.bySubject')}</h2></div>${subjectRows(a)}</section></div><section class="panel history-panel"><div class="panel-top"><h2>${ht('stats.history')}</h2><span class="muted">${ht('count.records', { count: sessions.length })}</span></div><div class="table-scroll"><table><thead><tr>${['subject', 'date', 'start', 'duration', 'status'].map((key) => `<th>${ht('table.' + key)}</th>`).join('')}</tr></thead><tbody>${
-    sessions
-      .slice(0, 100)
-      .map(
-        (x) =>
-          `<tr><td>${dot(subject(x.subjectId))}${esc(subject(x.subjectId)?.name || t('subjects.generic'))}</td><td>${fmtDate(x.start, { day: 'numeric', month: 'short' })}</td><td class="mono">${formatTime(x.start)}</td><td class="mono" title="${ht('table.segment', { time: formatClock(x.durationMs) })}">${formatClock(x.periodMs)}</td><td><span class="pill">${ht(x.id.startsWith('active:') ? 'table.running' : 'table.recorded')}</span></td></tr>`,
-      )
-      .join('') ||
-    `<tr><td colspan="5" class="empty">${ht('table.empty')}</td></tr>`
-  }</tbody></table></div>${sessions.length > 100 ? `<p class="panel-note">${ht('table.limited')}</p>` : ''}</section>`;
+  }<div class="panel-note">${ht('stats.activeDays', { count: Object.keys(a.days).length })}</div></section><section class="panel"><div class="panel-top"><h2>${ht('stats.bySubject')}</h2></div>${subjectRows(a)}</section></div>${heatmapCard()}${learning.records({ from: +from, to: +addDays(to, 1) })}`;
 }
 function timeline(a) {
   return `<div class="timeline">${a.parts.length ? a.parts.map((x) => `<div class="timeline-row"><span class="mono">${formatTime(x.start)}</span><div>${dot(subject(x.subjectId))}<strong>${esc(subject(x.subjectId)?.name)}</strong><small>${formatClock(x.ms)}</small></div></div>`).join('') : `<div class="empty"><p>${ht('timeline.empty')}</p></div>`}</div>`;
@@ -667,7 +604,7 @@ function accountForm() {
   return `${!reset && !update ? `<div class="mode-options account-tabs" aria-label="${ht('account.heading')}">${button('account-mode', t('cloud.login'), '', signup ? 'quiet' : 'selected', `data-value="login" aria-pressed="${!signup}"`)}${button('account-mode', t('cloud.signup'), '', signup ? 'selected' : 'quiet', `data-value="signup" aria-pressed="${signup}"`)}</div>` : ''}<h2>${ht(reset ? 'account.reset' : update ? 'account.newPassword' : signup ? 'cloud.signup' : 'cloud.login')}</h2><p class="muted">${ht(reset ? 'account.resetHelp' : 'account.intro')}</p><form id="cloud-auth" novalidate aria-busy="${busy}">${signup ? `<label class="field">${ht('a.name')}<input name="fullName" autocomplete="name" minlength="2" maxlength="120" required></label>` : ''}${!update ? `<label class="field">${ht('cloud.email')}<input name="email" type="email" autocomplete="email" required ${busy ? 'disabled' : ''}></label>` : ''}${!reset ? `<label class="field">${ht('cloud.password')}<input name="password" type="password" minlength="${signup || update ? 8 : 1}" autocomplete="${signup || update ? 'new-password' : 'current-password'}" required ${busy ? 'disabled' : ''}></label>` : ''}${signup || update ? `<label class="field">${ht('account.confirmPassword')}<input name="confirmation" type="password" minlength="8" autocomplete="new-password" required ${busy ? 'disabled' : ''}></label>` : ''}${!reset && !update ? `<label class="check-control"><input type="checkbox" name="remember">${ht('a.remember')}</label>` : ''}<p class="form-error" role="alert"></p><button class="btn primary" type="submit" name="mode" value="${accountMode}" ${busy ? 'disabled' : ''}>${ht(busy ? 'cloud.processing' : reset ? 'account.sendReset' : update ? 'account.savePassword' : signup ? 'cloud.signup' : 'cloud.login')}</button></form>${!signup && !reset && !update ? button('account-mode', t('account.forgot'), '', 'text-button', `data-value="reset" ${busy ? 'disabled' : ''}`) : reset ? button('account-mode', t('account.backLogin'), '', 'text-button', 'data-value="login"') : ''}${accountMessage ? `<p class="account-message" role="status">${esc(messageText(accountMessage))}</p>` : ''}`;
 }
 function accountPanel() {
-  return `<section class="panel account-panel"><div class="panel-top"><h2>${ht('account.heading')}</h2>${icon('cloud')}</div><p>${ht('a.accountLinks')}</p>${accountUser ? `<p class="account-email">${esc(accountUser.email || '')}</p><p class="sync-detail" role="status">${esc(syncLabel())}</p><div class="button-row">${button('sync-now', t('account.syncNow'), 'cloud', 'quiet')}${button('cloud-out', t('cloud.out'), '', 'text-button')}</div><h3>${ht('account.guestHeading')}</h3><p>${ht('account.guestHelp')}</p>${button('account-import', t('account.importGuest'), 'upload', 'quiet', syncEngine?.loading ? 'disabled' : '')}${button('account-mode', t('a.changePassword'), '', 'text-button', 'data-value="update"')}${accountMode === 'update' ? accountForm() : ''}` : accountForm()}<p class="small muted"><a href="/migrasi">${ht('nav.migrasi')}</a></p></section>`;
+  return `<section class="panel account-panel"><div class="panel-top"><h2>${ht('account.heading')}</h2>${icon('cloud')}</div><p>${ht('a.accountLinks')}</p>${accountUser ? `<p class="account-email">${esc(accountUser.email || '')}</p><p class="sync-detail" role="status">${esc(syncLabel())}</p><div class="button-row">${button('sync-now', t('account.syncNow'), 'cloud', 'quiet')}${button('cloud-out', t('cloud.out'), '', 'text-button')}</div><h3>${ht('account.guestHeading')}</h3><p>${ht('account.guestHelp')}</p>${button('account-import', t('account.importGuest'), 'upload', 'quiet', syncEngine?.loading ? 'disabled' : '')}${button('account-mode', t('a.changePassword'), '', 'text-button', 'data-value="update"')}${accountMode === 'update' ? accountForm() : ''}` : accountForm()}</section>`;
 }
 function accountView() {
   return `<div class="account-view">${accountPanel()}${!accountUser ? `<p class="account-guest">${ht('account.guestNote')} ${button('nav', t('account.continue'), '', 'text-button', 'data-view="study"')}</p>` : ''}</div>`;
@@ -677,9 +614,13 @@ function syncBanner() {
     return '';
   return `<div class="storage-alert sync-alert" role="${syncState.phase === 'error' || syncState.phase === 'conflict' ? 'alert' : 'status'}"><div><strong>${esc(syncLabel())}</strong><p>${ht(syncState.phase === 'conflict' ? 'account.conflictHelp' : syncState.phase === 'offline' ? 'account.offlineHelp' : syncState.phase === 'loading' ? 'account.loadingHelp' : 'account.errorHelp')}</p>${syncState.error ? `<p class="small">${esc(messageText(syncState.error))}</p>` : ''}</div><div class="button-row">${syncState.phase === 'conflict' ? `${button('sync-export-local', t('account.exportLocal'), 'download', 'quiet')}${button('sync-export-remote', t('account.exportRemote'), 'download', 'quiet')}${button('sync-local', t('account.keepLocal'), '', 'quiet')}${button('sync-remote', t('account.useCloud'), '', 'quiet')}` : syncState.phase === 'error' ? button('sync-now', t('account.retry'), '', 'quiet') : ''}</div></div>`;
 }
+function sectionNavigation(items) {
+  return `<nav class="section-nav" aria-label="${ht('nav.section')}">${items.map(([href, key, active]) => `<a class="btn quiet ${active ? 'selected' : ''}" href="${href}" ${active ? 'aria-current="page"' : ''}>${ht(key)}</a>`).join('')}</nav>`;
+}
 function settingsView() {
+  const tab = settingsSection(view, location.search);
   const themeName = t('theme.' + getThemeByKey(state.settings.themeKey).key);
-  return `<div class="settings-grid">${profileSettings.render()}<section class="panel"><div class="panel-top"><h2>${ht('settings.appearance')}</h2></div>${languageSelect()}<p class="small muted">${ht('settings.languageHelp')}</p><div class="field"><span>${ht('settings.mode')}</span><div class="mode-options">${[
+  const appearance = `<section class="panel"><div class="panel-top"><h2>${ht('settings.appearance')}</h2></div>${languageSelect()}<p class="small muted">${ht('settings.languageHelp')}</p><div class="field"><span>${ht('settings.mode')}</span><div class="mode-options">${[
     ['light', 'settings.light', 'sun'],
     ['dark', 'settings.dark', 'moon'],
     ['system', 'settings.system', 'monitor'],
@@ -718,14 +659,49 @@ function settingsView() {
     .colors.map((c) => `<span style="background:${c}"></span>`)
     .join(
       '',
-    )}<p>${esc(themeName)}</p></div><label class="field">${ht('settings.interface')}<select id="interface-select"><option value="studio" ${state.settings.interfaceStyle === 'studio' ? 'selected' : ''}>${ht('settings.studio')}</option><option value="opaline" ${state.settings.interfaceStyle === 'opaline' ? 'selected' : ''}>${ht('settings.opaline')}</option></select></label><p class="small muted">${ht('settings.themeSource')}</p></section><section class="panel"><div class="panel-top"><h2>${ht('settings.goalHeading')}</h2></div><form id="goal-form" novalidate><label class="field">${ht('settings.goalInput')}<input name="goal" type="number" min="15" max="1440" step="1" value="${state.settings.goal}" required></label><p class="muted">${ht('settings.goalHint')}</p><p class="form-error" role="alert"></p><button class="btn primary" type="submit">${ht('settings.goalSave')}</button></form></section><section class="panel"><div class="panel-top"><h2>${ht('settings.data')}</h2>${icon('download')}</div><p>${ht('settings.dataHelp')}</p><div class="button-row">${button('export', t('data.export'), 'download', 'primary')}${button('import', t('data.import'), 'upload', 'quiet')}</div><input id="import-file" type="file" accept="application/json,.json" hidden><div class="data-status">${icon('check')} ${ht(unreadableRaw ? 'data.recovery' : memoryOnly ? 'data.temporary' : 'data.local')}</div><p class="small muted">${ht('data.noCredentials')}</p></section>${accountPanel()}</div>`;
+    )}<p>${esc(themeName)}</p></div><label class="field">${ht('settings.interface')}<select id="interface-select"><option value="studio" ${state.settings.interfaceStyle === 'studio' ? 'selected' : ''}>${ht('settings.studio')}</option><option value="opaline" ${state.settings.interfaceStyle === 'opaline' ? 'selected' : ''}>${ht('settings.opaline')}</option></select></label><p class="small muted">${ht('settings.themeSource')}</p></section>`;
+  const goals = `<section class="panel"><div class="panel-top"><h2>${ht('settings.goalHeading')}</h2></div><form id="goal-form" novalidate><label class="field">${ht('settings.goalInput')}<input name="goal" type="number" min="15" max="1440" step="1" value="${state.settings.goal}" required></label><p class="muted">${ht('settings.goalHint')}</p><p class="form-error" role="alert"></p><button class="btn primary" type="submit">${ht('settings.goalSave')}</button></form></section>`;
+  const data = `<section class="panel"><div class="panel-top"><h2>${ht('settings.data')}</h2>${icon('download')}</div><p>${ht('settings.dataHelp')}</p><div class="button-row">${button('export', t('data.export'), 'download', 'primary')}${button('import', t('data.import'), 'upload', 'quiet')}</div><input id="import-file" type="file" accept="application/json,.json" hidden><div class="data-status">${icon('check')} ${ht(unreadableRaw ? 'data.recovery' : memoryOnly ? 'data.temporary' : 'data.local')}</div><p class="small muted">${ht('data.noCredentials')}</p></section>`;
+  const content =
+    tab === 'appearance'
+      ? appearance
+      : tab === 'data'
+        ? data +
+          `<section class="academic-section">${button('learn-storage', t('learn.storage'), '', 'quiet')}${button('learn-recovery', t('learn.recovery'), '', 'quiet')}${button('learn-reminders', t('learn.reminders'), '', 'quiet')}</section>`
+        : tab === 'subjects'
+          ? subjectsView() + academic.mapping()
+          : view === 'dasbor'
+            ? academic.render('dasbor')
+            : profileSettings.render() + goals;
+  return (
+    sectionNavigation([
+      ['/pengaturan', 'nav.profile', tab === 'profile'],
+      ['/mata-pelajaran', 'nav.subjects', tab === 'subjects'],
+      [
+        '/pengaturan?tab=appearance',
+        'settings.appearance',
+        tab === 'appearance',
+      ],
+      ['/pengaturan?tab=data', 'settings.data', tab === 'data'],
+      ['/akun', 'account.heading', false],
+    ]) + `<div class="settings-grid">${content}</div>`
+  );
 }
 
 function focusSelectorFor(active) {
   if (!active || !app.contains(active)) return '';
   if (active.id) return '#' + CSS.escape(active.id);
   if (active.dataset.task)
-    return '[data-task="' + CSS.escape(active.dataset.task) + '"]';
+    return (
+      '[data-task="' +
+      CSS.escape(active.dataset.task) +
+      '"]' +
+      (active.dataset.occurrenceDate
+        ? '[data-occurrence-date="' +
+          CSS.escape(active.dataset.occurrenceDate) +
+          '"]'
+        : '')
+    );
   if (active.dataset.action) {
     let selector = '[data-action="' + CSS.escape(active.dataset.action) + '"]';
     for (const k of ['id', 'value', 'view'])
@@ -774,12 +750,18 @@ async function withCloudOperation(kind, fn) {
   }
 }
 function updateTitle() {
-  const label =
+  const section = sectionFor(view);
+  const label = t(
     view === 'account'
-      ? t('account.heading')
-      : view === 'calendar'
-        ? t('page.calendar')
-        : t('nav.' + view);
+      ? 'account.heading'
+      : section === 'today'
+        ? 'nav.home'
+        : section === 'schedule'
+          ? 'nav.schedule'
+          : section === 'tracker'
+            ? 'nav.materials'
+            : 'nav.' + section,
+  );
   document.title =
     state.timer.startedAt !== null
       ? `${formatClock(elapsed(state))} · ${subject(state.timer.subjectId)?.name || t('subjects.generic')} — Ruang Belajar`
@@ -798,25 +780,15 @@ const profileSettings = createProfileSettings({
 const academic = createAcademicUI({
   validateForm,
   state: () => state,
-  scope: () => KEY,
   mutate,
   render,
   navigate,
   toast,
   icon,
   confirm: confirmAction,
-  openModal,
   closeModal: () => {
     if (modal.open) modal.close();
   },
-  backup: (source) =>
-    download(
-      serializeBackup(source),
-      'ruang-belajar-sebelum-impor-' + dayKey() + '.json',
-      'application/json',
-    ),
-  exportButton: () => button('export', t('data.export'), 'download', 'quiet'),
-  cancelButton: () => button('close-modal', t('common.cancel'), '', 'quiet'),
 });
 const learning = createLearningUI({
   validateForm,
@@ -831,6 +803,9 @@ const learning = createLearningUI({
   confirm: confirmAction,
   download,
   academic,
+  icon,
+  taskDate: () => taskDate,
+  taskFilter: () => taskFilter,
   snapshots: () => snapshots(KEY),
   restore: async (raw) => {
     const next = validateState(JSON.parse(raw));
@@ -856,7 +831,11 @@ const learning = createLearningUI({
   },
 });
 function render({ discardDrafts = [] } = {}) {
-  if (renderedView !== view) profileSettings.reset();
+  if (
+    renderedView !== view ||
+    renderedPath !== location.pathname + location.search
+  )
+    profileSettings.reset();
   const active = document.activeElement,
     focusSelector = focusSelectorFor(active),
     drafts = captureDrafts(discardDrafts),
@@ -870,56 +849,49 @@ function render({ discardDrafts = [] } = {}) {
   applyTheme();
   applyDocumentLocale();
   updateTitle();
+  const section = sectionFor(view);
   const pageKey =
-    view === 'calendar'
-      ? 'page.calendar'
-      : view === 'account'
-        ? 'account.heading'
-        : 'nav.' + view;
-  const academicPages = [
-    'agenda',
-    'dasbor',
-    'materi',
-    'tracker',
-    'tryout',
-    'panduan',
-    'migrasi',
-  ];
-  const body = ['today', 'planner', 'notes', 'records'].includes(view)
-    ? learning.render(view)
-    : academicPages.includes(view)
-      ? (view === 'agenda' ? learning.summary() : '') + academic.render(view)
-      : view === 'study'
-        ? studyView()
-        : view === 'stats'
-          ? statsView()
-          : view === 'calendar'
-            ? heatmapCard(true) + academic.calendar()
-            : view === 'subjects'
-              ? subjectsView() + academic.mapping()
-              : view === 'account'
-                ? accountView()
-                : settingsView() +
-                  `<section class="academic-section"><button class="btn quiet" data-action="learn-storage">${ht('learn.storage')}</button><button class="btn quiet" data-action="learn-recovery">${ht('learn.recovery')}</button><button class="btn quiet" data-action="learn-reminders">${ht('learn.reminders')}</button></section>`;
-  const nav = [
-    ['today', 'calendar-days'],
-    ['dasbor', 'panel-left'],
-    ['planner', 'calendar'],
-    ['notes', 'book-open'],
-    ['records', 'timer'],
-    ['agenda', 'calendar-days'],
-    ['study', 'timer'],
-    ['materi', 'library-big'],
-    ['tracker', 'tracker'],
-    ['tryout', 'flag'],
-    ['calendar', 'calendar'],
-    ['stats', 'chart'],
-    ['subjects', 'book'],
-    ['panduan', 'guide'],
-  ];
+    view === 'account'
+      ? 'account.heading'
+      : section === 'today'
+        ? 'nav.home'
+        : section === 'schedule'
+          ? 'nav.schedule'
+          : section === 'tracker'
+            ? 'nav.materials'
+            : 'nav.' + section;
+  let body;
+  if (section === 'today') body = studyView();
+  else if (section === 'schedule') {
+    body =
+      sectionNavigation([
+        ['/jadwal', 'nav.agenda', ['agenda', 'schedule'].includes(view)],
+        ['/kalender', 'nav.calendar', view === 'calendar'],
+        ['/rencana', 'nav.planner', view === 'planner'],
+      ]) +
+      (view === 'calendar'
+        ? heatmapCard(true) + academic.calendar()
+        : view === 'planner'
+          ? learning.render('planner')
+          : academic.render('agenda'));
+  } else if (section === 'tracker') {
+    body =
+      sectionNavigation([
+        ['/tracker', 'nav.progress', view === 'tracker'],
+        ['/materi', 'nav.curriculumResources', view === 'materi'],
+        ['/catatan', 'nav.notes', view === 'notes'],
+      ]) +
+      (view === 'notes' ? learning.render('notes') : academic.render(view));
+  } else if (section === 'stats') body = statsView();
+  else if (view === 'account') body = accountView();
+  else if (section === 'settings') body = settingsView();
+  else body = academic.render(view);
+  const navLink = ([value, ic, key]) =>
+    `<a href="${routes[value]}" class="nav-item ${value === section ? 'active' : ''}" ${value === section ? 'aria-current="page"' : ''}>${icon(ic)}<span>${ht(key)}</span></a>`;
   const stats = materialStats(state.academic);
-  app.innerHTML = `<div class="app-shell" data-interface-style="${state.settings.interfaceStyle}" data-resolved-mode="${document.body.dataset.resolvedMode}"><a class="skip-link" href="#main-content">${ht('nav.skip')}</a><aside class="sidebar"><a class="wordmark" href="/">ruang<span>belajar</span></a><nav aria-label="${ht('nav.label')}">${nav.map(([value, ic]) => `<a href="${routes[value]}" class="nav-item ${value === view ? 'active' : ''}" ${value === view ? 'aria-current="page"' : ''}>${icon(ic)}<span>${ht('nav.' + value)}</span></a>`).join('')}</nav><div class="sidebar-bottom"><div class="sidebar-goal"><span>${ht('a.progress')}</span><progress value="${stats.stages}" max="${stats.topics * 3}" aria-label="${ht('a.progress')}"></progress><small>${ht('a.topicCount', { count: stats.done, total: stats.topics })}</small></div><a class="nav-item ${view === 'migrasi' ? 'active' : ''}" href="/migrasi">${icon('upload')}<span>${ht('nav.migrasi')}</span></a><a class="nav-item ${view === 'settings' ? 'active' : ''}" href="/pengaturan">${icon('settings')}<span>${ht('nav.settings')}</span></a><a class="nav-item" href="/akun">${icon('cloud')}<span>${esc(syncLabel())}</span></a></div></aside><main id="main-content" tabindex="-1" class="main ${focused ? 'focused' : ''}"><header class="main-header"><div><h1 tabindex="-1">${ht(pageKey)}</h1><p data-live="current-date">${fmtDate(new Date(), { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</p></div><div class="header-actions"><a class="btn quiet account-entry" href="/akun">${ht(accountUser ? 'account.heading' : 'cloud.login')}</a><select id="header-language-select" class="header-language" aria-label="${ht('settings.language')}">${LANGUAGES.map((l) => `<option value="${l.code}" lang="${l.code}" ${l.code === getLocale() ? 'selected' : ''}>${esc(l.name)}</option>`).join('')}</select>${button('quick-theme', '', document.body.dataset.resolvedMode === 'dark' ? 'sun' : 'moon', 'icon-btn', `aria-label="${ht(document.body.dataset.resolvedMode === 'dark' ? 'mode.enableLight' : 'mode.enableDark')}"`)}</div></header>${storageIssue ? `<div class="storage-alert" role="alert">${esc(messageText(storageIssue))} ${button('export', t(unreadableRaw ? 'data.downloadOriginal' : 'data.export'), '', 'quiet')}${recoverableCache ? button('repair-account-cache', t('data.repairCache'), '', 'quiet') : ''}${unreadableRaw ? button('recover-local', t('data.startFresh'), '', 'quiet') : ''}</div>` : ''}${syncBanner()}${hasActiveSession(state) && view !== 'study' ? `<div class="persistent-timer"><a href="/belajar">${esc(subject(state.timer.subjectId)?.name || '')} <strong class="mono" data-live="timer">${formatClock(elapsed(state))}</strong></a>${button('toggle-timer', t(state.timer.startedAt !== null ? 'timer.pause' : 'timer.resume'), state.timer.startedAt !== null ? 'pause' : 'play', 'quiet', `data-run-id="${state.timer.runId}" data-running="${state.timer.startedAt !== null}"`)}${button('finish', t('timer.finish'), 'stop', 'quiet', `data-run-id="${state.timer.runId}"`)}</div>` : ''}<div class="view-content">${body}</div></main></div>`;
+  app.innerHTML = `<div class="app-shell" data-interface-style="${state.settings.interfaceStyle}" data-resolved-mode="${document.body.dataset.resolvedMode}"><a class="skip-link" href="#main-content">${ht('nav.skip')}</a><aside class="sidebar"><a class="wordmark" href="/hari-ini">ruang<span>belajar</span></a><nav aria-label="${ht('nav.label')}">${primaryNavigation.map(navLink).join('')}</nav><div class="sidebar-bottom"><div class="sidebar-goal"><span>${ht('a.progress')}</span><progress value="${stats.stages}" max="${stats.topics * 3}" aria-label="${ht('a.progress')}"></progress><small>${ht('a.topicCount', { count: stats.done, total: stats.topics })}</small></div>${utilityNavigation.map(navLink).join('')}</div></aside><main id="main-content" tabindex="-1" class="main ${focused ? 'focused' : ''}"><header class="main-header"><div><h1 tabindex="-1">${ht(pageKey)}</h1><p data-live="current-date">${fmtDate(new Date(), { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</p></div><div class="header-actions"><span class="sync-status" role="status">${esc(syncLabel())}</span><a class="btn quiet account-entry" href="/akun">${ht(accountUser ? 'account.heading' : 'cloud.login')}</a><select id="header-language-select" class="header-language" aria-label="${ht('settings.language')}">${LANGUAGES.map((l) => `<option value="${l.code}" lang="${l.code}" ${l.code === getLocale() ? 'selected' : ''}>${esc(l.name)}</option>`).join('')}</select>${button('quick-theme', '', document.body.dataset.resolvedMode === 'dark' ? 'sun' : 'moon', 'icon-btn', `aria-label="${ht(document.body.dataset.resolvedMode === 'dark' ? 'mode.enableLight' : 'mode.enableDark')}"`)}</div></header>${storageIssue ? `<div class="storage-alert" role="alert">${esc(messageText(storageIssue))} ${button('export', t(unreadableRaw ? 'data.downloadOriginal' : 'data.export'), '', 'quiet')}${recoverableCache ? button('repair-account-cache', t('data.repairCache'), '', 'quiet') : ''}${unreadableRaw ? button('recover-local', t('data.startFresh'), '', 'quiet') : ''}</div>` : ''}${syncBanner()}${hasActiveSession(state) && section !== 'today' ? `<div class="persistent-timer"><a href="/belajar">${esc(subject(state.timer.subjectId)?.name || '')} <strong class="mono" data-live="timer">${formatClock(elapsed(state))}</strong></a>${button('toggle-timer', t(state.timer.startedAt !== null ? 'timer.pause' : 'timer.resume'), state.timer.startedAt !== null ? 'pause' : 'play', 'quiet', `data-run-id="${state.timer.runId}" data-running="${state.timer.startedAt !== null}"`)}${button('finish', t('timer.finish'), 'stop', 'quiet', `data-run-id="${state.timer.runId}"`)}</div>` : ''}<div class="view-content">${body}</div></main></div>`;
   renderedView = view;
+  renderedPath = location.pathname + location.search;
   for (const draft of drafts) {
     const field = app.querySelector(draft.selector);
     if (field) {
@@ -1122,35 +1094,7 @@ function editSubject(id) {
   );
 }
 function editTask(id) {
-  const task = state.tasks.find((x) => x.id === id);
-  openModal(
-    message(task ? 'form.taskEdit' : 'form.taskNew'),
-    () =>
-      `<form novalidate><label class="field">${ht('form.taskTitle')}<input name="title" maxlength="300" value="${esc(task?.title || '')}" placeholder="${ht('form.taskExample')}" required autofocus></label><label class="field">${ht('table.subject')}<select name="subjectId">${subjectOptions(task ? task.subjectId : state.timer.subjectId, true)}</select></label><div class="field"><label for="task-edit-date">${ht('common.date')}</label>${dateField('task-edit-date', 'date', task?.date || taskDate, t('common.date'))}</div><p class="form-error" role="alert"></p><div class="modal-actions">${button('close-modal', t('common.cancel'), '', 'quiet')}<button class="btn primary" type="submit">${ht('form.taskSave')}</button></div></form>`,
-    async (fd) => {
-      if (!fd.get('title').trim()) throw new LocalisedError('error.taskTitle');
-      const date = parseDateInput(fd.get('date'));
-      await mutate((next) => {
-        const item = {
-          title: fd.get('title').trim(),
-          subjectId: fd.get('subjectId'),
-          date,
-        };
-        if (id)
-          applyRecordDraft(
-            next.tasks.find((x) => x.id === id),
-            task,
-            item,
-          );
-        else {
-          if (next.tasks.length >= LIMITS.tasks)
-            throw new LocalisedError('error.taskLimit');
-          next.tasks.push({ ...item, id: uid(), done: false });
-        }
-      });
-      toast(message('toast.taskSaved'));
-    },
-  );
+  learning.editTask(id);
 }
 function showDay(date) {
   const a = aggregate(state, date, date);

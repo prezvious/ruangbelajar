@@ -18,7 +18,9 @@ jobs:
       - run: npm run test:http
       - run: npx playwright install --with-deps chromium
       - run: npm run test:browser
+      - run: node tests/navigation-browser.test.mjs
       - run: node tests/browser.test.mjs
+      - run: node tests/data-backup-browser.test.mjs
       - run: node tests/account-browser.test.mjs
       - run: node tests/audit-browser.test.mjs
       - run: node tests/support-browser.test.mjs

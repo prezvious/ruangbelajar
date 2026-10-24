@@ -101,4 +101,8 @@ Agenda dates are user-configured, starting at week 1; per-session overrides and 
 
 The 59 copied Sela palettes, Studio/Opaline layouts and light/dark/system modes remain available in Settings alongside the four Ruang palettes. Vendor theme files stay unchanged; the Ruang token adapter is study/themes.mjs. New interface copy uses fixed six-language catalogues, while original academic content remains in its source language.
 
-Mobile navigation scrolls within its own row. Controls for migration, exports and scheduling sit beside the data they affect. Source licences and TTL attribution remain included.
+Mobile navigation scrolls within its own row. Data & backups stays in Settings, with export and restore controls beside the data they affect. Scheduling controls stay beside the schedule. Source licences and TTL attribution remain included.
+
+## Navigation consolidation (24 October 2026)
+
+Five primary destinations organize the workspace: Today, Schedule, Materials, Mock exams, and Statistics. Guide and Settings remain utilities. Schedule has path-addressable agenda, calendar, and capacity sections; Materials has progress, curriculum resources, and notes. Today combines the timer and one daily task queue, with a compact target summary. Statistics owns the heatmap and editable, period-filtered session history. Profile, daily goals, subject management, appearance, and backups live in Settings sections. The account entry and sync status stay in the header. Legacy URLs remain reachable and select their parent navigation item. Timer, curriculum completion, and material stages retain independent data and actions.

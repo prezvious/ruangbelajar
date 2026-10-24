@@ -1,7 +1,7 @@
 import { assertCloudCapacity } from './learning-model.mjs';
 import { newState, validateState } from './core.mjs';
 import { LANGUAGES, LocalisedError } from './i18n.mjs';
-import { mergeWorkspaces, importFingerprint } from './migration.mjs';
+import { mergeWorkspaces, importFingerprint } from './guest-import.mjs';
 
 export const GUEST_KEY = 'ruang.workspace.v3.guest';
 export const workspaceKey = (project, userId) =>

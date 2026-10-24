@@ -27,7 +27,7 @@ Agenda, tracker materi, timer, tugas, kalender, statistik, dan catatan tryout un
 | Profil dan target | Ringkasan nama, kampus, jurusan, dan target selesai di Dasbor; pengeditan dan penyimpanan di Settings. |
 | Tryout | Hasil tujuh subtes, edit/hapus, dan grafik 12 hasil terakhir. |
 | Akun | Daftar/masuk/verifikasi/reset sandi, cookie HttpOnly, cache per akun, sinkronisasi otomatis, dan penanganan konflik. |
-| Data | Ekspor/impor cadangan JSON, pratinjau sebelum penerapan, cadangan otomatis, deduplikasi impor, dan pemulihan lokal. |
+| Data & cadangan | Ekspor/impor cadangan JSON, konfirmasi sebelum pemulihan, cadangan otomatis, dan pemulihan lokal. |
 | Tampilan | 63 palet, mode terang/gelap/sistem, Studio/Opaline, bahasa Indonesia, Inggris UK/US, Spanyol, Prancis, dan Rusia. |
 
 Waktu timer, penyelesaian agenda, dan tahap materi merupakan catatan terpisah. Menyelesaikan timer tidak otomatis menandai materi tuntas. Rata-rata tujuh nilai tryout bukan skor gabungan resmi UTBK. Konten kurikulum dan nama materi asli tetap dalam bahasa sumber.
@@ -53,29 +53,32 @@ Untuk mengaktifkan sinkronisasi, jalankan [supabase-schema.sql](supabase-schema.
 
 Sesi akun memakai cookie terenkripsi HttpOnly, SameSite=Lax, dan Secure pada Vercel. Token autentikasi tidak disimpan dalam localStorage atau cadangan. Durasi sesi adalah 6 bulan kalender atau 12 bulan dengan pilihan **Ingat saya**.
 
-Data tamu tidak otomatis masuk ke akun. Gunakan **Akun → Tambahkan catatan tamu** untuk menambahkannya. Untuk memulihkan cadangan JSON, buka **Migrasi data**, pilih berkas, lalu periksa pratinjau sebelum menerapkannya. Cadangan data saat ini diunduh sebelum penerapan.
+Data tamu tidak otomatis masuk ke akun. Gunakan **Akun → Tambahkan catatan tamu** untuk menambahkannya. Untuk memulihkan cadangan JSON, buka **Settings → Data & cadangan → Impor JSON**, pilih berkas, lalu konfirmasi pemulihan. Cadangan data saat ini diunduh sebelum penerapan.
 
 ## Halaman
+
+Sidebar memiliki lima menu utama: **Hari ini**, **Jadwal**, **Materi**, **Tryout**, dan **Statistik**. **Panduan** dan **Pengaturan** berada di bagian utilitas. Jadwal menggabungkan agenda, kalender, dan kapasitas; Materi menyediakan progres, sumber kurikulum, serta catatan. Statistik memuat riwayat yang dapat dikoreksi. Profil dan mata pelajaran dikelola melalui bagian Pengaturan, sedangkan akun dapat dibuka dari header. Semua path lama tetap dapat digunakan dan menandai menu induk yang sesuai.
 
 | Path | Isi |
 | --- | --- |
 | `/` | Agenda belajar |
-| `/hari-ini` | Antrean hari ini dan tertinggal, tugas, dan rutinitas |
+| `/hari-ini` | Timer, antrean hari ini dan tertinggal, tugas, rutinitas, dan ringkasan harian |
+| `/jadwal` | Halaman Jadwal dengan bagian agenda, kalender, dan kapasitas |
 | `/rencana` | Kapasitas, estimasi, pratinjau, dan penerapan jadwal |
 | `/catatan` | Catatan dan sumber pribadi Markdown/TXT per topik |
 | `/catatan-waktu` | Koreksi, riwayat perubahan, pengarsipan, dan pemulihan waktu |
-| `/dasbor` | Ringkasan profil dan target selesai belajar |
+| `/dasbor` | Bagian profil dan target dalam Pengaturan |
 | `/materi` | Materi dan referensi |
 | `/tracker?subject=PK` | Tracker dengan filter subtes opsional |
 | `/tryout` | Hasil dan grafik tryout |
-| `/belajar` | Timer, tugas, dan ringkasan hari ini |
-| `/statistik` | Statistik dan riwayat waktu |
+| `/belajar` | Ruang Hari ini yang sama, termasuk timer dan tugas |
+| `/statistik` | Statistik, heatmap, dan riwayat waktu yang dapat dikoreksi |
 | `/kalender` | Kalender waktu dan rencana belajar |
-| `/mata-pelajaran` | Kelola mata pelajaran dan pemetaan subtes |
+| `/mata-pelajaran` | Bagian Pengaturan untuk mata pelajaran dan pemetaan subtes |
+| `/pengaturan?tab=appearance`, `/pengaturan?tab=data` | Bagian tampilan serta data dan cadangan |
 | `/pengaturan` | Profil dan target, tampilan, bahasa, target harian, ekspor/impor, dan akun |
 | `/akun`, `/sign-in`, `/sign-up` | Pengelolaan akun |
 | `/auth/verify` | Callback verifikasi/reset sandi |
-| `/migrasi` | Impor cadangan dan pemetaan subtes |
 | `/panduan` | Panduan dan sumber kurikulum |
 
 Tautan berbasis hash diterjemahkan ke path; `/agenda` dan `/index.html` diarahkan ke `/`. Back/Forward, tautan langsung, dan refresh dilayani server lokal serta rewrite Vercel.
@@ -104,6 +107,7 @@ npm run test:database
 npm run test:http
 npm run test:browser
 node tests/browser.test.mjs
+node tests/data-backup-browser.test.mjs
 node tests/account-browser.test.mjs
 node tests/audit-browser.test.mjs
 node tests/support-browser.test.mjs
@@ -122,7 +126,8 @@ Gunakan `npm run format` untuk merapikan sumber aktif. Berkas vendor dan data ku
 - `study/app.mjs`: shell, navigasi, timer, tugas, statistik, mata pelajaran, dan akun.
 - `study/academic-ui.mjs`, `academic-model.mjs`, `catalog.mjs`: agenda, materi, tracker, ringkasan profil, tryout, dan jadwal.
 - `study/profile-settings.mjs`: formulir profil dan target, validasi, serta penyimpanan dari Settings.
-- `study/core.mjs`, `migration.mjs`, `repository.mjs`: skema data, waktu, validasi, impor, transaksi IndexedDB, dan pemulihan.
+- `study/core.mjs`, `repository.mjs`: skema data, waktu, validasi cadangan, transaksi IndexedDB, dan pemulihan.
+- `study/guest-import.mjs`: penambahan catatan tamu ke akun.
 - `study/learning-model.mjs`, `learning-ui.mjs`, `calendar-export.mjs`: antrean, kapasitas, koreksi, catatan/sumber, rutinitas, dan pengingat.
 - `study/sync.mjs`, `cloud.mjs`: rekonsiliasi dan transport API dengan cookie.
 - `study/http.mjs`, `forms.mjs`, `support-pages.mjs`: pesan API, validasi formulir, verifikasi email, dan halaman kesalahan.

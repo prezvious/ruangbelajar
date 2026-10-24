@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { newState, validateState } from '../study/core.mjs';
-import { mergeWorkspaces } from '../study/migration.mjs';
+import { mergeWorkspaces } from '../study/guest-import.mjs';
 
 const target = newState();
 target.subjects = [{ id: 'subject', name: 'Math', color: '#abcdef' }];

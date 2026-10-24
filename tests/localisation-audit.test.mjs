@@ -1,12 +1,12 @@
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
-import { decodeImport } from '../study/migration.mjs';
+import { parseBackup } from '../study/core.mjs';
 import { LocalisedError, LANGUAGES, setLocale, t } from '../study/i18n.mjs';
 import { requestJSON } from '../study/http.mjs';
 import { validateForm } from '../study/forms.mjs';
 
 assert.throws(
-  () => decodeImport('{'),
+  () => parseBackup('{'),
   (error) => error instanceof LocalisedError,
   'Malformed imports must show a translated message',
 );

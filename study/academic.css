@@ -1,4 +1,46 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Lora:wght@400;500;600&display=swap');
+.section-nav {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  margin-bottom: 24px;
+  padding: 3px 1px 8px;
+}
+.section-nav > a {
+  flex: none;
+  min-height: 44px;
+}
+.section-nav > a.selected {
+  color: var(--button-strong-text);
+  background: var(--accent-main);
+  border-color: var(--accent-main);
+}
+.daily-target {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 20px;
+  font-size: 13px;
+  margin-bottom: 18px;
+}
+.daily-queue,
+.daily-queue .task-copy {
+  min-width: 0;
+}
+.daily-queue .task {
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.daily-queue .task > label {
+  flex: 1 1 180px;
+}
+.daily-queue .task-filter {
+  flex-wrap: wrap;
+}
+.sync-status {
+  color: var(--text-subtle);
+  font-size: 12px;
+}
 .task .check-box {
   pointer-events: none;
 }
@@ -786,5 +828,18 @@ dialog .planned-row {
   }
   .summary-item strong {
     font-size: 19px;
+  }
+}
+
+@media (max-width: 650px) {
+  .app-shell .sidebar > nav {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+  .app-shell .sidebar nav .nav-item {
+    min-width: 0;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    font-size: 10px;
   }
 }

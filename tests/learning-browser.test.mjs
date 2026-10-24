@@ -97,10 +97,8 @@ try {
   await page.reload();
   await page.getByText('Tugas tertinggal', { exact: true }).waitFor();
   assert.ok(await page.getByText('Tertinggal', { exact: false }).count());
-  await page
-    .locator('[data-action="learn-task-done"][data-id="routine"]')
-    .first()
-    .click();
+  await page.locator('[data-task="routine"]').first().click();
+  await page.locator('.sidebar a[href="/tracker"]').click();
   await page
     .getByRole('link', { name: 'Catatan dan sumber', exact: true })
     .click();
@@ -151,6 +149,7 @@ try {
   );
   await dialog.getByRole('button', { name: 'Simpan', exact: true }).click();
   await page.getByText('<b>Teks literal</b> 世界', { exact: true }).waitFor();
+  await page.locator('.sidebar a[href="/jadwal"]').click();
   await page
     .getByRole('link', { name: 'Rencana kapasitas', exact: true })
     .click();
@@ -171,7 +170,7 @@ try {
   );
   await page.locator('[data-action="learn-apply-plan"]').waitFor();
   await page.locator('[data-action="learn-apply-plan"]').click();
-  await page.getByRole('link', { name: 'Catatan waktu', exact: true }).click();
+  await page.locator('.sidebar a[href="/statistik"]').click();
   await page.locator('[data-action="learn-time"][data-id="time"]').click();
   await dialog.locator('[name="reason"]').fill('Koreksi tes browser');
   await dialog.getByRole('button', { name: 'Simpan', exact: true }).click();

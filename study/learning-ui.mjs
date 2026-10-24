@@ -110,10 +110,34 @@ export function createLearningUI(api) {
   function queue() {
     const today = dayKey(),
       s = api.state(),
+      selectedDate = api.taskDate?.() || today;
+    const activeOnly = api.taskFilter?.() === 'active',
       q = dailyQueue(s, today);
+    const datedTasks = taskOccurrences(s, selectedDate, selectedDate);
+    const tasks =
+      selectedDate === today
+        ? [...q.tasks, ...datedTasks.filter((x) => x.done)]
+        : datedTasks;
+    const agenda =
+      selectedDate === today
+        ? [
+            ...q.agenda,
+            ...agendaItems.filter(
+              (x) =>
+                agendaDate(s.academic, x.id) === today &&
+                s.academic.completed.includes(x.id),
+            ),
+          ]
+        : agendaItems
+            .filter((x) => agendaDate(s.academic, x.id) === selectedDate)
+            .map((x) => ({ ...x, date: selectedDate }));
+    const visibleAgenda = agenda.filter(
+      (x) => !activeOnly || !s.academic.completed.includes(x.id),
+    );
+    const visibleTasks = tasks.filter((x) => !activeOnly || !x.done);
     const status = (d) =>
       `<span class="small ${d < today ? 'overdue' : 'muted'}">${esc(formatCivilDate(d))}${d < today ? ' · ' + h('learn.overdue') : ''}</span>`;
-    return `<div class="button-row">${b('task', 'learn.task', '', 'primary')}<a class="btn quiet" href="/rencana">${h('nav.planner')}</a>${b('reminders', 'learn.reminders')}</div><p class="small muted">${h('learn.queueHelp')}</p><section class="academic-section">${q.agenda.map((x) => `<article class="planned-row"><div><strong>${esc(x.code + ' · ' + x.topics.join(', '))}</strong>${status(x.date)}</div><div class="button-row"><button class="btn quiet" data-action="academic-start" data-agenda-id="${x.id}">${h('a.start')}</button>${b('agenda-done', 'learn.done', `data-id="${x.id}"`)}${x.date < today ? b('agenda-move', 'learn.move', `data-id="${x.id}"`) : ''}</div></article>`).join('')}${q.tasks.map((x) => `<article class="planned-row"><div><strong>${esc(x.title)}</strong>${status(x.date)}${x.recurrence ? `<small>${h('learn.' + x.recurrence.frequency)}</small>` : ''}</div><div class="button-row">${b('task-done', 'learn.done', `data-id="${x.id}" data-date="${x.date}"`)}${x.recurrence ? b('task-skip', 'learn.skip', `data-id="${x.id}" data-date="${x.date}"`) : x.date < today ? b('task-move', 'learn.move', `data-id="${x.id}"`) : ''}${b('task', 'a.edit', `data-id="${x.id}"`)}${b('task-delete', 'a.delete', `data-id="${x.id}"`)}</div></article>`).join('')}${!q.agenda.length && !q.tasks.length ? `<p class="empty">${h('learn.empty')}</p>` : ''}</section>${routines()}`;
+    return `<section class="panel tasks-panel daily-queue"><div class="panel-top"><h2>${h('nav.today')}</h2></div><div class="button-row">${b('task', 'learn.task', '', 'primary')}<a class="btn quiet" href="/rencana">${h('nav.planner')}</a>${b('reminders', 'learn.reminders')}</div><div class="task-filter"><div class="tabs"><button data-action="task-filter" data-value="all" aria-pressed="${!activeOnly}">${h('tasks.all')}</button><button data-action="task-filter" data-value="active" aria-pressed="${activeOnly}">${h('tasks.active')}</button></div>${dateField('task-date', '', selectedDate, t('tasks.date'))}</div>${!s.academic.startDate ? `<p class="small"><a href="/jadwal">${h('nav.setupSchedule')}</a></p>` : ''}<p class="small muted">${h('learn.queueHelp')}</p><div class="task-list">${visibleAgenda.map((x) => `<article class="planned-row"><div><strong>${esc(x.code + ' · ' + x.topics.join(', '))}</strong>${status(x.date || today)}</div><div class="button-row"><button class="btn quiet" data-action="academic-start" data-agenda-id="${x.id}">${h('a.start')}</button><label class="check-control"><input type="checkbox" data-agenda="${x.id}" ${s.academic.completed.includes(x.id) ? 'checked' : ''}>${h('learn.done')}</label>${x.date < today ? b('agenda-move', 'learn.move', `data-id="${x.id}"`) : ''}</div></article>`).join('')}${visibleTasks.map((x) => `<article class="task planned-row ${x.done ? 'done' : ''}"><label><input type="checkbox" data-task="${esc(x.id)}" data-occurrence-date="${x.date}" ${x.done ? 'checked' : ''}><span class="check-box">${api.icon('check')}</span><span class="task-copy"><strong>${esc(x.title)}</strong>${status(x.date)}<small>${esc(s.subjects.find((y) => y.id === x.subjectId)?.name || t('tasks.independent'))}${x.recurrence ? ' · ' + h('learn.' + x.recurrence.frequency) : ''}</small></span></label><div class="button-row">${x.recurrence && !x.done ? b('task-skip', 'learn.skip', `data-id="${x.id}" data-date="${x.date}"`) : x.date < today && !x.done ? b('task-move', 'learn.move', `data-id="${x.id}"`) : ''}${b('task', 'a.edit', `data-id="${x.id}"`)}${b('task-delete', 'a.delete', `data-id="${x.id}"`)}</div></article>`).join('')}${!visibleAgenda.length && !visibleTasks.length ? `<p class="empty">${h('learn.empty')}</p>` : ''}</div>${routines()}</section>`;
   }
   function routines() {
     const tasks = api.state().tasks.filter((x) => x.recurrence);
@@ -179,20 +203,29 @@ export function createLearningUI(api) {
         .join('') || `<p class="empty">${h('a.noMatch')}</p>`
     }${items.length > 25 ? `<p>${notePage * 25 + 1}–${Math.min(notePage * 25 + 25, items.length)} / ${items.length} ${b('note-page', 'learn.more')}</p>` : ''}`;
   }
-  function records() {
+  let recordRange = '';
+  function records({ from = -Infinity, to = Infinity } = {}) {
     const s = api.state(),
-      rows = [...s.sessions].sort((a, b) => b.start - a.start),
+      range = from + ':' + to;
+    if (recordRange !== range) {
+      page = 0;
+      recordRange = range;
+    }
+    const rows = [...s.sessions]
+        .filter((x) => x.end > from && x.start < to)
+        .sort((a, b) => b.start - a.start),
       total = rows.length;
     if (page * 100 >= total) page = 0;
-    return `<div class="button-row">${b('time', 'learn.newTime', '', 'primary')}${b('recovery', 'learn.recovery')}${b('archive', 'learn.archive')}</div><p class="small muted">${h('learn.timeHelp')}</p>${rows
-      .slice(page * 100, page * 100 + 100)
-      .map(
-        (x) =>
-          `<article class="planned-row"><div><strong>${esc(s.subjects.find((y) => y.id === x.subjectId)?.name)}</strong><small>${esc(formatDate(new Date(x.start), { dateStyle: 'medium', timeStyle: 'short' }))} – ${esc(formatDate(new Date(x.end), { timeStyle: 'short' }))} · ${esc(formatDuration(x.durationMs))}</small></div><div>${b('time', 'a.edit', `data-id="${x.id}"`)}${b('time-delete', 'a.delete', `data-id="${x.id}"`)}</div></article>`,
-      )
-      .join(
-        '',
-      )}${total > 100 ? `<p>${page * 100 + 1}–${Math.min((page + 1) * 100, total)} / ${total} ${b('time-page', 'learn.more')}</p>` : ''}<details class="academic-section"><summary>${h('learn.audit')}</summary>${[
+    return `<section class="panel history-panel" id="time-records"><div class="panel-top"><h2>${h('stats.history')}</h2><span>${esc(t('count.records', { count: total }))}</span></div><div class="button-row">${b('time', 'learn.newTime', '', 'primary')}${b('recovery', 'learn.recovery')}${b('archive', 'learn.archive')}</div><p class="small muted">${h('learn.historyHelp')} ${h('learn.timeHelp')}</p><div class="table-scroll"><table><thead><tr><th>${h('table.subject')}</th><th>${h('table.date')}</th><th>${h('table.duration')}</th><th>${h('a.edit')}</th></tr></thead><tbody>${
+      rows
+        .slice(page * 100, page * 100 + 100)
+        .map(
+          (x) =>
+            `<tr><td>${esc(s.subjects.find((y) => y.id === x.subjectId)?.name)}</td><td>${esc(formatDate(new Date(x.start), { dateStyle: 'medium', timeStyle: 'short' }))} – ${esc(formatDate(new Date(x.end), { timeStyle: 'short' }))}</td><td>${esc(formatDuration(x.durationMs))}</td><td><div class="button-row">${b('time', 'a.edit', `data-id="${x.id}"`)}${b('time-delete', 'a.delete', `data-id="${x.id}"`)}</div></td></tr>`,
+        )
+        .join('') ||
+      `<tr><td colspan="4" class="empty">${h('table.empty')}</td></tr>`
+    }</tbody></table></div>${total > 100 ? `<p>${page * 100 + 1}–${Math.min((page + 1) * 100, total)} / ${total} ${b('time-page', 'learn.more')}</p>` : ''}<details class="academic-section"><summary>${h('learn.audit')}</summary>${[
       ...s.learning.timeEdits,
     ]
       .reverse()
@@ -200,7 +233,7 @@ export function createLearningUI(api) {
         (x) =>
           `<div class="planned-row"><span>${esc(formatDate(new Date(x.at), { dateStyle: 'medium', timeStyle: 'short' }))} · ${esc(x.reason)}</span><span>${esc(formatDuration(x.before?.durationMs || 0))} → ${esc(formatDuration(x.after?.durationMs || 0))}</span></div>`,
       )
-      .join('')}</details>`;
+      .join('')}</details></section>`;
   }
   const checkedScope = (scope) => {
     if (scope !== api.scope()) throw new LocalisedError('error.accountChanged');
@@ -213,7 +246,16 @@ export function createLearningUI(api) {
     api.openModal(
       message(original ? 'a.edit' : 'learn.task'),
       () =>
-        `<form novalidate class="learning-form">${field('title', 'learn.title', original?.title || '', 'text', 'required maxlength="300"')}${date('taskDate', 'a.date', original?.date || dayKey())}${field('minutes', 'learn.minutes', original?.minutes || 30, 'number', 'min="1" max="1440" required')}<label>${h('learn.frequency')}<select name="frequency">${['none', 'daily', 'weekly', 'monthly'].map((x) => `<option value="${x}" ${x === (original?.recurrence?.frequency || 'none') ? 'selected' : ''}>${h('learn.' + x)}</option>`).join('')}</select></label>${field('interval', 'learn.interval', original?.recurrence?.interval || 1, 'number', 'min="1" max="30" required')}<div class="date-entry"><label>${h('learn.until')}</label>${dateField('learn-until', 'until', original?.recurrence?.until || '', t('learn.until'))}</div><p class="small muted">${h('learn.monthHelp')}</p><label>${h('learn.format')}<select name="format"><option value="md" ${original?.format !== 'txt' ? 'selected' : ''}>Markdown</option><option value="txt" ${original?.format === 'txt' ? 'selected' : ''}>TXT</option></select></label><label>${h('learn.body')}<textarea name="body" rows="6">${esc(original?.body || '')}</textarea></label><label>${h('learn.textImport')}<input type="file" id="learn-text-import" accept=".md,.markdown,.txt,text/plain,text/markdown"></label>${actions()}</form>`,
+        `<form novalidate class="learning-form">${field('title', 'learn.title', original?.title || '', 'text', 'required maxlength="300"')}<label>${h('table.subject')}<select name="subjectId"><option value="">${h('tasks.independent')}</option>${api
+          .state()
+          .subjects.filter((x) => !x.archived || x.id === original?.subjectId)
+          .map(
+            (x) =>
+              `<option value="${esc(x.id)}" ${x.id === original?.subjectId ? 'selected' : ''}>${esc(x.name)}</option>`,
+          )
+          .join(
+            '',
+          )}</select></label>${date('taskDate', 'a.date', original?.date || api.taskDate?.() || dayKey())}${field('minutes', 'learn.minutes', original?.minutes || 30, 'number', 'min="1" max="1440" required')}<label>${h('learn.frequency')}<select name="frequency">${['none', 'daily', 'weekly', 'monthly'].map((x) => `<option value="${x}" ${x === (original?.recurrence?.frequency || 'none') ? 'selected' : ''}>${h('learn.' + x)}</option>`).join('')}</select></label>${field('interval', 'learn.interval', original?.recurrence?.interval || 1, 'number', 'min="1" max="30" required')}<div class="date-entry"><label>${h('learn.until')}</label>${dateField('learn-until', 'until', original?.recurrence?.until || '', t('learn.until'), { required: false })}</div><p class="small muted">${h('learn.monthHelp')}</p><label>${h('learn.format')}<select name="format"><option value="md" ${original?.format !== 'txt' ? 'selected' : ''}>Markdown</option><option value="txt" ${original?.format === 'txt' ? 'selected' : ''}>TXT</option></select></label><label>${h('learn.body')}<textarea name="body" rows="6">${esc(original?.body || '')}</textarea></label><label>${h('learn.textImport')}<input type="file" id="learn-text-import" accept=".md,.markdown,.txt,text/plain,text/markdown"></label>${actions()}</form>`,
       async (fd) => {
         checkedScope(scope);
         await api.mutate((s) => {
@@ -224,6 +266,7 @@ export function createLearningUI(api) {
             task = {
               ...(original || { id: uid(), subjectId: '', done: false }),
               title: fd.get('title').trim(),
+              subjectId: fd.get('subjectId'),
               date: parseDateInput(fd.get('taskDate')),
               minutes: Number(fd.get('minutes')),
               body: fd.get('body'),
@@ -670,6 +713,8 @@ export function createLearningUI(api) {
   }
   return {
     summary,
+    records,
+    editTask,
     reset() {
       notePage = 0;
       clearTimeout(searchTimer);

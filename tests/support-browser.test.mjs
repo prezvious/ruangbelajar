@@ -89,7 +89,11 @@ try {
       CATALOGUES[code]['errorPage.title403'],
     );
     await page.goto(url + '/panduan');
-    await page.locator('#migration').waitFor();
+    await page.locator('#sync-guide').waitFor();
+    assert.equal(
+      await page.locator('#migration, a[href="/MIGRATION.md"]').count(),
+      0,
+    );
     assert.ok(
       (await page.locator('#sync-guide').innerText()).includes('IndexedDB'),
     );
@@ -175,7 +179,7 @@ try {
   assert.deepEqual(errors, []);
   await page.screenshot({ path: 'outputs/support-mobile.png', fullPage: true });
   console.log(
-    'PASS: six-language verification, true HTTP 403/404, current sync/migration guide, mobile layout, email draft preservation, localised validation, verified fragment cleanup and recovery-link resend.',
+    'PASS: six-language verification, true HTTP 403/404, current sync/recovery guide, mobile layout, email draft preservation, localised validation, verified fragment cleanup and recovery-link resend.',
   );
 } finally {
   await browser?.close();

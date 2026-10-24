@@ -29,4 +29,4 @@ Tinjauan dilakukan sendiri, tanpa reviewer independen. Fokusnya preservasi data 
 - Folder Sela dan database asal tidak dihapus; tidak ada commit, push, atau deploy.
 - Pratinjau lokal pada `http://127.0.0.1:5199` merespons HTTP 200 dengan entry point gabungan. Origin pratinjau ini mempunyai localStorage sendiri; data asal tetap memerlukan migrasi melalui jalur yang didokumentasikan.
 
-Panduan operasional: [MIGRATION.md](../../../MIGRATION.md) dan [AUTH.md](../../../AUTH.md).
+Panduan operasional: [README.md](../../../README.md) dan [AUTH.md](../../../AUTH.md).

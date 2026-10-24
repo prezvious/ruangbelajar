@@ -25,12 +25,6 @@ import {
   uid,
   LIMITS,
 } from './core.mjs';
-import {
-  decodeImport,
-  importFingerprint,
-  importSummary,
-  mergeWorkspaces,
-} from './migration.mjs';
 
 export function createAcademicUI(api) {
   const text = (key, params) => esc(t(key, params)),
@@ -163,11 +157,8 @@ export function createAcademicUI(api) {
     const s = api.state();
     return `<section class="academic-section"><h2>${text('a.mapping')}</h2><div class="mapping-grid">${[...trackerData.subjects, { code: 'AWAL', name: 'Pendahuluan' }].map((x) => `<label>${x.code}<select data-subject-link="${x.code}"><option value="">${text('a.autoSubject')}</option>${s.subjects.map((y) => `<option value="${esc(y.id)}" ${s.academic.subjectLinks[x.code] === y.id ? 'selected' : ''}>${esc(y.name)}${y.archived ? t('subjects.archivedSuffix') : ''}</option>`).join('')}</select></label>`).join('')}</div></section>`;
   }
-  function migration() {
-    return `<section class="academic-section"><p>${text('a.migrationHelp')}</p><p class="small muted">${text('a.accountLinks')}</p><div class="button-row">${button('merge-file', t('a.mergeFile'), '', 'primary')}<a class="btn quiet" href="/panduan#migration">${text('a.guide')}</a>${api.exportButton()}</div><input id="academic-merge-file" type="file" accept=".json,application/json" hidden></section>${mapping()}`;
-  }
   function guide() {
-    const help = `<section class="academic-section" id="migration"><h2>${text('guide.migrationTitle')}</h2><p>${text('guide.migrationText')}</p><a href="/MIGRATION.md" target="_blank" rel="noopener">${text('guide.technicalDoc')}</a></section><section class="academic-section" id="sync-guide"><h2>${text('guide.title')}</h2><p>${text('learn.userGuide')}</p><h3>${text('learn.recovery')}</h3><p>${text('learn.recoveryHelp')}</p><h3>${text('learn.reminders')}</h3><p>${text('learn.reminderHelp')}</p><p>${text('learn.capacityHelp')}</p></section>`;
+    const help = `<section class="academic-section" id="sync-guide"><h2>${text('guide.title')}</h2><p>${text('learn.userGuide')}</p><h3>${text('learn.recovery')}</h3><p>${text('learn.recoveryHelp')}</p><h3>${text('learn.reminders')}</h3><p>${text('learn.reminderHelp')}</p><p>${text('learn.capacityHelp')}</p></section>`;
     return `<section class="academic-section"><h2>${text('a.curriculum')} · TTL Indonesia</h2><p>${text('a.guideText')}</p><p class="small muted">${text('a.separate')}</p><p class="small muted">SNBT ${trackerData.sourceYear} · ${text('a.resources')}</p><div class="resource-list">${trackerData.resources.map((x) => link(x.url, x.label)).join('')}</div>${trackerData.contacts.map((x) => `<p class="small">${esc(x.label)}: ${esc(x.value)}</p>`).join('')}</section>${help}${curriculum.weeks[0].sessions.map((x) => `<section class="academic-section"><h2>${esc(x.name)}</h2><div class="resource-list">${x.links.map((url) => link(url, x.name)).join('')}</div></section>`).join('')}`;
   }
   function render(view) {
@@ -188,7 +179,6 @@ export function createAcademicUI(api) {
         dasbor: dashboard,
         tryout: tryouts,
         panduan: guide,
-        migrasi: migration,
       }[view] || (() => '')
     )();
   }
@@ -251,8 +241,6 @@ export function createAcademicUI(api) {
               )),
           ),
       );
-    else if (action === 'merge-file')
-      document.querySelector('#academic-merge-file').click();
     else if (action === 'start') {
       const item = agendaItems.find((x) => x.id === el.dataset.agendaId),
         topic = trackerData.topics.find((x) => x.id === el.dataset.topicId),
@@ -299,40 +287,6 @@ export function createAcademicUI(api) {
       api.navigate('study');
     }
   }
-  async function importFile(file) {
-    if (!file) return;
-    if (file.size > 128 * 1024 * 1024)
-      throw new LocalisedError('error.importTooLarge');
-    if (hasActiveSession(api.state()))
-      throw new LocalisedError('error.finishImport');
-    const scope = api.scope(),
-      source = decodeImport(await file.text()),
-      fingerprint = await importFingerprint(source);
-    if (scope !== api.scope()) throw new LocalisedError('error.accountChanged');
-    if (api.state().academic.imports.includes(fingerprint)) {
-      api.toast(message('a.duplicate'));
-      return;
-    }
-    const counts = importSummary(source);
-    api.openModal(
-      message('a.preview'),
-      () =>
-        `<p>${text('a.previewCounts', counts)}</p><p>${text('a.mergeExplain')}</p><form><label class="check-control"><input type="checkbox" name="appearance">${text('a.useAppearance')}</label><label class="check-control"><input type="checkbox" name="profile">${text('a.useProfile')}</label><p class="form-error" role="alert"></p><div class="modal-actions">${api.cancelButton()}<button class="btn primary" type="submit">${text('a.merge')}</button></div></form>`,
-      async (fd) => {
-        if (scope !== api.scope())
-          throw new LocalisedError('error.accountChanged');
-        await api.mutate((s) => {
-          const merged = mergeWorkspaces(s, source, fingerprint, {
-            appearance: fd.has('appearance'),
-            incomingProfile: fd.has('profile'),
-          });
-          api.backup(s);
-          Object.assign(s, merged);
-        });
-        api.toast(message('a.saved'));
-      },
-    );
-  }
   document.addEventListener('input', (event) => {
     if (event.target.id === 'academic-search') {
       query = event.target.value;
@@ -364,13 +318,6 @@ export function createAcademicUI(api) {
               s.academic.subjectLinks[el.dataset.subjectLink] = el.value;
             else delete s.academic.subjectLinks[el.dataset.subjectLink];
           });
-        else if (el.id === 'academic-merge-file') {
-          try {
-            await importFile(el.files[0]);
-          } finally {
-            el.value = '';
-          }
-        }
       })
       .catch(api.toast);
   });

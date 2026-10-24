@@ -9,12 +9,7 @@ import {
   parseBackup,
 } from '../study/core.mjs';
 import { agendaDate, materialStats } from '../study/academic-model.mjs';
-import {
-  migrateLocalRuang,
-  mergeWorkspaces,
-  importFingerprint,
-  GUEST_KEY,
-} from '../study/migration.mjs';
+import { mergeWorkspaces, importFingerprint } from '../study/guest-import.mjs';
 
 const state = newState();
 assert.equal(
@@ -45,30 +40,6 @@ assert.equal(materialStats(state.academic).topics, 116);
 assert.equal(materialStats(state.academic, 'PK').stages, 2);
 assert.equal(materialStats(state.academic, 'PM').stages, 2);
 assert.equal(materialStats(state.academic).stages, 2);
-const rawAgenda = JSON.stringify({ week: 5, completed: ['2-0'] }),
-  rawTracker = JSON.stringify({
-    profile: { name: 'Nama lama' },
-    progress: { 'math-4': [true, true, false] },
-    tryouts: [],
-  });
-const map = new Map([
-    ['ruang-belajar-v1', rawAgenda],
-    ['ruang-belajar-tracker-v1', rawTracker],
-  ]),
-  storage = {
-    getItem: (k) => map.get(k) ?? null,
-    setItem: (k, v) => map.set(k, v),
-  };
-const migrated = migrateLocalRuang(storage);
-assert.equal(migrated.state.academic.profile.name, 'Nama lama');
-assert.equal(migrated.state.academic.week, 5);
-assert.equal(map.get('ruang-belajar-v1'), rawAgenda);
-assert.equal(migrateLocalRuang(storage).migrated, false);
-const corrupt = {
-  getItem: (key) => (key === GUEST_KEY ? null : 'broken'),
-  setItem: () => assert.fail('Must not overwrite damaged legacy data'),
-};
-assert.throws(() => migrateLocalRuang(corrupt));
 const source = newState();
 source.subjects = [
   { id: 'pk', name: 'Matematika', color: '#123456', archived: false },
@@ -111,9 +82,9 @@ assert.throws(() =>
     { now: 62000 },
   ),
 );
-console.log('PASS: unified schema and legacy Sela backup compatibility.');
+console.log('PASS: workspace schema and backup compatibility.');
 console.log(
-  'PASS: dates across years, explicit rescheduling, unique PK/PM progress, lossless/idempotent migration, damaged-source protection, ID remapping, timer context and overlap rejection.',
+  'PASS: dates across years, explicit rescheduling, unique PK/PM progress, idempotent guest import, ID remapping, timer context and overlap rejection.',
 );
 
 const ended = structuredClone(source);
