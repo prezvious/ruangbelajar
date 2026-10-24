@@ -6,9 +6,9 @@
 - `/sign-in`: email, kata sandi, dan pilihan Remember me.
 - `/auth/verify`: proses tautan konfirmasi email, status berhasil/gagal, dan
   permintaan kirim ulang email. Tidak ada login Google atau Apple.
-- Kontrol akun dan tombol keluar pada sidebar aplikasi.
-- Pengunjung tetap dapat memakai agenda tanpa akun. Progres masih lokal,
-  belum disinkronkan atau dipisahkan berdasarkan akun.
+- Tautan akun pada sidebar; tombol keluar tersedia di halaman Akun.
+- Pengunjung tetap dapat memakai workspace tamu tanpa akun. Workspace akun
+  disimpan terpisah dan disinkronkan melalui API setelah skema SQL diterapkan.
 
 ## Konfigurasi Lokal
 
@@ -119,3 +119,18 @@ SMTP, dan kebijakan Auth harus diselesaikan oleh pengelola proyek.
 
 Tidak ada akun uji nyata dibuat otomatis oleh implementasi ini. Pengiriman email
 dan klik tautan nyata perlu diverifikasi menggunakan inbox milik pengelola.
+
+## Workspace gabungan (21 Oktober 2026)
+
+Entry point aplikasi akun kini tersedia dalam enam bahasa melalui `study/app.mjs`; `/auth/verify` tetap memakai halaman callback khusus. Nama lengkap dan pilihan Ingat saya tetap diteruskan ke API autentikasi. Halaman akun menambahkan reset/ganti kata sandi.
+
+Progres kini dipisahkan per akun dan disinkronkan melalui `/api/workspace`. Token tetap di cookie HttpOnly; kode browser tidak menerima access/refresh token. Endpoint memverifikasi akun server, menolak origin lain, memvalidasi schema v3, dan memeriksa revisi melalui RPC `save_ruang_workspace`.
+
+Jalankan seluruh `supabase-schema.sql` di Supabase Ruang untuk menyiapkan `ruang_workspaces`, RLS, dan RPC. Data tamu diimpor secara eksplisit dari halaman Akun. Tabel `study_data` dan akun Sela tidak dipindahkan otomatis.
+
+Reset kata sandi dikirim melalui `/api/auth` dengan aksi `request-reset`. Callback menggunakan `/auth/verify` yang sama dengan konfirmasi email. Tautan recovery membuka `/akun?password-reset=1`; kata sandi diperbarui melalui sesi server dengan aksi `update-password`. Pastikan template, redirect allowlist, dan SMTP mendukung alur ini.
+
+Suite API lokal memverifikasi cookie, isolasi akun, pemeriksaan origin, validasi data, dan konflik revisi dengan upstream tiruan. SQL produksi, pengiriman email, serta sinkronisasi akun nyata dua perangkat memerlukan pemeriksaan pemilik proyek setelah SQL diterapkan.
+
+
+Pembaruan 23 Oktober 2026: deploy `supabase-schema.sql` terbaru (sama dengan migrasi bernomor) untuk menutup penulisan langsung dan memakai RPC privat yang memeriksa identitas/revisi. Dukungan lokal tidak membuktikan SMTP, CAPTCHA, rate limit atau JWT produksi; periksa gerbang rilis di `IMPLEMENTATION-2026-10-23.md`. Jangan mengaktifkan CAPTCHA provider sebelum integrasi token frontend/provider tersedia.

@@ -1,0 +1,336 @@
+[
+  {
+    "file": "cambridge-9093-2027-2028.pdf",
+    "pages": 32,
+    "text_characters": 63329,
+    "page_characters": [
+      394,
+      3026,
+      1881,
+      2259,
+      3081,
+      2700,
+      3247,
+      1016,
+      2050,
+      1836,
+      1230,
+      2474,
+      2774,
+      1562,
+      2920,
+      2383,
+      2293,
+      2148,
+      1661,
+      2160,
+      2323,
+      2117,
+      684,
+      1278,
+      550,
+      2345,
+      2082,
+      2535,
+      2077,
+      1543,
+      1633,
+      1067
+    ],
+    "rendered_pages": [
+      9,
+      10,
+      12,
+      13,
+      15,
+      17
+    ]
+  },
+  {
+    "file": "cambridge-9694-2026-2027.pdf",
+    "pages": 30,
+    "text_characters": 56923,
+    "page_characters": [
+      343,
+      3264,
+      1514,
+      2140,
+      2334,
+      2539,
+      1424,
+      3264,
+      1824,
+      992,
+      1827,
+      2260,
+      2436,
+      1784,
+      1660,
+      1064,
+      2249,
+      1933,
+      620,
+      2764,
+      2800,
+      1463,
+      1412,
+      2563,
+      3048,
+      3149,
+      718,
+      1540,
+      917,
+      1078
+    ],
+    "rendered_pages": [
+      8,
+      9,
+      11,
+      14,
+      19
+    ]
+  },
+  {
+    "file": "cambridge-9709-2026-2027.pdf",
+    "pages": 62,
+    "text_characters": 110676,
+    "page_characters": [
+      394,
+      3264,
+      1733,
+      2481,
+      2787,
+      3159,
+      2661,
+      1433,
+      1325,
+      599,
+      1633,
+      1214,
+      1576,
+      1159,
+      759,
+      1465,
+      1365,
+      1541,
+      2314,
+      1770,
+      1993,
+      2535,
+      2037,
+      1546,
+      1634,
+      1811,
+      1932,
+      1735,
+      2654,
+      2785,
+      2348,
+      1735,
+      2537,
+      2246,
+      1843,
+      1123,
+      1844,
+      2355,
+      1415,
+      2717,
+      2046,
+      1165,
+      1062,
+      940,
+      710,
+      1269,
+      839,
+      989,
+      1070,
+      474,
+      3763,
+      2524,
+      2418,
+      1060,
+      1570,
+      2442,
+      2474,
+      2727,
+      1941,
+      1536,
+      1122,
+      1078
+    ],
+    "rendered_pages": [
+      9,
+      15,
+      16,
+      19,
+      22,
+      26,
+      31,
+      34,
+      37
+    ]
+  },
+  {
+    "file": "drive-bahasa-buatan-pola.pdf",
+    "pages": 3,
+    "text_characters": 0,
+    "page_characters": [
+      0,
+      0,
+      0
+    ],
+    "rendered_pages": [
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "file": "drive-bahasa-inggris.pdf",
+    "pages": 6,
+    "text_characters": 0,
+    "page_characters": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rendered_pages": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ]
+  },
+  {
+    "file": "drive-data-ketidakpastian.pdf",
+    "pages": 12,
+    "text_characters": 0,
+    "page_characters": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rendered_pages": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ]
+  },
+  {
+    "file": "drive-evaluasi-refleksi.pdf",
+    "pages": 2,
+    "text_characters": 0,
+    "page_characters": [
+      0,
+      0
+    ],
+    "rendered_pages": [
+      1,
+      2
+    ]
+  },
+  {
+    "file": "drive-integral.pdf",
+    "pages": 5,
+    "text_characters": 0,
+    "page_characters": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rendered_pages": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  {
+    "file": "drive-lingkaran.pdf",
+    "pages": 3,
+    "text_characters": 0,
+    "page_characters": [
+      0,
+      0,
+      0
+    ],
+    "rendered_pages": [
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "file": "drive-paragraph-following-preceding.pdf",
+    "pages": 3,
+    "text_characters": 0,
+    "page_characters": [
+      0,
+      0,
+      0
+    ],
+    "rendered_pages": [
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "file": "drive-polinomial.pdf",
+    "pages": 3,
+    "text_characters": 0,
+    "page_characters": [
+      0,
+      0,
+      0
+    ],
+    "rendered_pages": [
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "file": "drive-vektor.pdf",
+    "pages": 4,
+    "text_characters": 0,
+    "page_characters": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "rendered_pages": [
+      1,
+      2,
+      3,
+      4
+    ]
+  }
+]

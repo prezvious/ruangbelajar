@@ -1,0 +1,144 @@
+.learning-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 1.5rem;
+  padding: 0.5rem 0 1rem;
+}
+.learning-summary h2 {
+  font-size: 1.1rem;
+}
+.learning-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  max-width: 880px;
+}
+.learning-form label,
+.learning-filters label {
+  display: grid;
+  gap: 0.4rem;
+  min-width: 0;
+}
+.learning-form fieldset,
+.learning-form details,
+.learning-form .form-error,
+.learning-form .modal-actions,
+.learning-form > p,
+.learning-form > label:has(textarea) {
+  grid-column: 1/-1;
+}
+.learning-form textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 120px;
+  padding: 0.75rem;
+  font: inherit;
+  color: var(--text-main);
+  background: var(--surface-input);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+.learning-form input,
+.learning-form select,
+.learning-filters input,
+.learning-filters select {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0.6rem 0.75rem;
+  font: inherit;
+  color: var(--text-main);
+  background: var(--surface-input);
+  border: 1px solid var(--control-border);
+  border-radius: 6px;
+}
+.learning-form input[type='checkbox'] {
+  width: auto;
+  min-height: 20px;
+  padding: 0;
+}
+.weekday-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+.weekday-options label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.estimate-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  padding-top: 1rem;
+}
+.learning-filters {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.personal-text {
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  font: inherit;
+  line-height: 1.7;
+  max-width: 100%;
+}
+.markdown-preview {
+  white-space: normal;
+}
+.markdown-preview pre {
+  overflow: auto;
+  max-width: 100%;
+  padding: 1rem;
+  background: var(--surface-input);
+}
+.markdown-preview table {
+  display: block;
+  max-width: 100%;
+  overflow: auto;
+}
+.markdown-preview td,
+.markdown-preview th {
+  padding: 0.4rem;
+  border: 1px solid var(--line);
+}
+.planned-row {
+  min-width: 0;
+}
+.planned-row > div {
+  min-width: 0;
+}
+.planned-row strong,
+.planned-row a {
+  overflow-wrap: anywhere;
+}
+.planned-row .button-row {
+  flex-wrap: wrap;
+}
+.overdue {
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+@media (max-width: 640px) {
+  .learning-form,
+  .learning-filters,
+  .estimate-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .planned-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .learning-form fieldset {
+    min-width: 0;
+  }
+}

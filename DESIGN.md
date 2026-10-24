@@ -92,3 +92,13 @@ on-screen keyboards, enlarged text, and expanded errors may require scrolling.
 The desktop sidebar scrolls independently when the viewport cannot fit its
 navigation and account controls. Horizontal scrolling stays inside navigation,
 week selectors, subject tabs, and charts rather than the document.
+
+## Consolidated study workspace (21 October 2026)
+
+The original Ruang palette, DM Sans/Lora typography, quiet separators, clean path navigation and Lucide family remain the default. Sela time tracking, daily tasks, heatmaps, statistics and subject management now share that workspace. A persistent timer strip stays visible outside the study page.
+
+Agenda dates are user-configured, starting at week 1; per-session overrides and calendar tasks are explicit data rather than invented exam dates. Material stages and elapsed time remain separate. The dashboard shows only the profile and study target summary, without section dividers or breadcrumb navigation. Profile editing and saving live in Settings.
+
+The 59 copied Sela palettes, Studio/Opaline layouts and light/dark/system modes remain available in Settings alongside the four Ruang palettes. Vendor theme files stay unchanged; the Ruang token adapter is study/themes.mjs. New interface copy uses fixed six-language catalogues, while original academic content remains in its source language.
+
+Mobile navigation scrolls within its own row. Controls for migration, exports and scheduling sit beside the data they affect. Source licences and TTL attribution remain included.

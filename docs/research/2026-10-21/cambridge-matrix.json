@@ -1,0 +1,579 @@
+{
+  "method": "Editorial comparison of explicit list entries; broad related titles do not establish full coverage; alternative exam routes are not cumulative requirements.",
+  "summary": {
+    "9093": {
+      "rows": 6,
+      "broadRelated": 1,
+      "absent": 5
+    },
+    "9694": {
+      "rows": 15,
+      "broadRelated": 11,
+      "absent": 4
+    },
+    "9709": {
+      "rows": 38,
+      "broadRelated": 18,
+      "absent": 20
+    }
+  },
+  "rows": [
+    {
+      "syllabus": "9093",
+      "section": "P1",
+      "title": "Pembacaan analitis",
+      "status": "judul_umum_terkait",
+      "existing_ids": [
+        "lbe-4",
+        "lbe-9",
+        "lbe-10",
+        "lbe-20"
+      ],
+      "source": "https://www.cambridgeinternational.org/Images/721359-2027-2028-syllabus.pdf"
+    },
+    {
+      "syllabus": "9093",
+      "section": "P2",
+      "title": "Produksi tulisan",
+      "status": "belum_tercantum",
+      "existing_ids": [],
+      "source": "https://www.cambridgeinternational.org/Images/721359-2027-2028-syllabus.pdf"
+    },
+    {
+      "syllabus": "9093",
+      "section": "P3A",
+      "title": "Perubahan bahasa",
+      "status": "belum_tercantum",
+      "existing_ids": [],
+      "source": "https://www.cambridgeinternational.org/Images/721359-2027-2028-syllabus.pdf"
+    },
+    {
+      "syllabus": "9093",
+      "section": "P3B",
+      "title": "Pemerolehan bahasa anak",
+      "status": "belum_tercantum",
+      "existing_ids": [],
+      "source": "https://www.cambridgeinternational.org/Images/721359-2027-2028-syllabus.pdf"
+    },
+    {
+      "syllabus": "9093",
+      "section": "P4A",
+      "title": "Bahasa Inggris di dunia",
+      "status": "belum_tercantum",
+      "existing_ids": [],
+      "source": "https://www.cambridgeinternational.org/Images/721359-2027-2028-syllabus.pdf"
+    },
+    {
+      "syllabus": "9093",
+      "section": "P4B",
+      "title": "Bahasa dan identitas",
+      "status": "belum_tercantum",
+      "existing_ids": [],
+      "source": "https://www.cambridgeinternational.org/Images/721359-2027-2028-syllabus.pdf"
+    },
+    {
+      "syllabus": "9694",
+      "section": "1.1",
+      "title": "Memahami penyajian informasi",
+      "status": "judul_umum_terkait",
+      "existing_ids": [
+        "pu-19"
+      ],
+      "source": "https://www.cambridgeinternational.org/Images/697412-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9694",
+      "section": "1.2",
+      "title": "Menghubungkan informasi secara logis",
+      "status": "judul_umum_terkait",
+      "existing_ids": [
+        "pu-5",
+        "pu-6"
+      ],
+      "source": "https://www.cambridgeinternational.org/Images/697412-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9694",
+      "section": "2.1",
+      "title": "Mengolah informasi",
+      "status": "judul_umum_terkait",
+      "existing_ids": [
+        "pu-20"
+      ],
+      "source": "https://www.cambridgeinternational.org/Images/697412-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9694",
+      "section": "2.2",
+      "title": "Menelusuri solusi berbatasan",
+      "status": "belum_tercantum",
+      "existing_ids": [],
+      "source": "https://www.cambridgeinternational.org/Images/697412-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9694",
+      "section": "2.3",
+      "title": "Menarik deduksi",
+      "status": "judul_umum_terkait",
+      "existing_ids": [
+        "pu-7",
+        "pu-8",
+        "pu-9",
+        "pu-12"
+      ],
+      "source": "https://www.cambridgeinternational.org/Images/697412-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9694",
+      "section": "3.1",
+      "title": "Mengubah representasi data",
+      "status": "judul_umum_terkait",
+      "existing_ids": [
+        "pu-19"
+      ],
+      "source": "https://www.cambridgeinternational.org/Images/697412-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9694",
+      "section": "3.2",
+      "title": "Menjelaskan pola data",
+      "status": "judul_umum_terkait",
+      "existing_ids": [
+        "pu-13",
+        "pu-15"
+      ],
+      "source": "https://www.cambridgeinternational.org/Images/697412-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9694",
+      "section": "4.1",
+      "title": "Menguji perubahan skenario",
+      "status": "belum_tercantum",
+      "existing_ids": [],
+      "source": "https://www.cambridgeinternational.org/Images/697412-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9694",
+      "section": "4.2",
+      "title": "Mengembangkan model",
+      "status": "belum_tercantum",
+      "existing_ids": [],
+      "source": "https://www.cambridgeinternational.org/Images/697412-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9694",
+      "section": "5.1",
+      "title": "Menilai mutu bukti",
+      "status": "judul_umum_terkait",
+      "existing_ids": [
+        "pu-11"
+      ],
+      "source": "https://www.cambridgeinternational.org/Images/697412-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9694",
+      "section": "5.2",
+      "title": "Menggunakan bukti lintas sumber",
+      "status": "judul_umum_terkait",
+      "existing_ids": [
+        "pu-11",
+        "pu-12"
+      ],
+      "source": "https://www.cambridgeinternational.org/Images/697412-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9694",
+      "section": "6.1",
+      "title": "Membedah struktur argumen",
+      "status": "judul_umum_terkait",
+      "existing_ids": [
+        "pu-12"
+      ],
+      "source": "https://www.cambridgeinternational.org/Images/697412-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9694",
+      "section": "7.1",
+      "title": "Menguji kesalahan argumen",
+      "status": "judul_umum_terkait",
+      "existing_ids": [
+        "pu-10",
+        "pu-15"
+      ],
+      "source": "https://www.cambridgeinternational.org/Images/697412-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9694",
+      "section": "7.2",
+      "title": "Menilai kelemahan argumen",
+      "status": "judul_umum_terkait",
+      "existing_ids": [
+        "pu-10",
+        "pu-14"
+      ],
+      "source": "https://www.cambridgeinternational.org/Images/697412-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9694",
+      "section": "8.1",
+      "title": "Membangun argumen persuasif",
+      "status": "belum_tercantum",
+      "existing_ids": [],
+      "source": "https://www.cambridgeinternational.org/Images/697412-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "1.1",
+      "title": "Kuadrat",
+      "status": "judul_umum_terkait",
+      "existing_ids": [
+        "math-20"
+      ],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "1.2",
+      "title": "Fungsi",
+      "status": "judul_umum_terkait",
+      "existing_ids": [
+        "math-19",
+        "math-41"
+      ],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "1.3",
+      "title": "Koordinat",
+      "status": "judul_umum_terkait",
+      "existing_ids": [
+        "math-6",
+        "math-18"
+      ],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "1.4",
+      "title": "Ukuran sudut melingkar",
+      "status": "judul_umum_terkait",
+      "existing_ids": [
+        "math-26"
+      ],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "1.5",
+      "title": "Trigonometri",
+      "status": "judul_umum_terkait",
+      "existing_ids": [
+        "math-26"
+      ],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "1.6",
+      "title": "Deret",
+      "status": "judul_umum_terkait",
+      "existing_ids": [
+        "math-35",
+        "math-36",
+        "math-37"
+      ],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "1.7",
+      "title": "Diferensiasi",
+      "status": "judul_umum_terkait",
+      "existing_ids": [
+        "math-42"
+      ],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "1.8",
+      "title": "Integrasi",
+      "status": "belum_tercantum",
+      "existing_ids": [],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "2.1",
+      "title": "Aljabar menengah",
+      "status": "judul_umum_terkait",
+      "existing_ids": [
+        "math-10",
+        "math-11",
+        "math-12",
+        "math-13"
+      ],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "2.2",
+      "title": "Logaritma dan eksponensial",
+      "status": "judul_umum_terkait",
+      "existing_ids": [
+        "math-15",
+        "math-16"
+      ],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "2.3",
+      "title": "Trigonometri menengah",
+      "status": "judul_umum_terkait",
+      "existing_ids": [
+        "math-26"
+      ],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "2.4",
+      "title": "Diferensiasi menengah",
+      "status": "judul_umum_terkait",
+      "existing_ids": [
+        "math-42"
+      ],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "2.5",
+      "title": "Integrasi menengah",
+      "status": "belum_tercantum",
+      "existing_ids": [],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "2.6",
+      "title": "Pencarian akar numerik",
+      "status": "belum_tercantum",
+      "existing_ids": [],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "3.1",
+      "title": "Aljabar lanjutan",
+      "status": "judul_umum_terkait",
+      "existing_ids": [
+        "math-10",
+        "math-11",
+        "math-12",
+        "math-13"
+      ],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "3.2",
+      "title": "Logaritma dan eksponensial lanjutan",
+      "status": "judul_umum_terkait",
+      "existing_ids": [
+        "math-15",
+        "math-16"
+      ],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "3.3",
+      "title": "Trigonometri lanjutan",
+      "status": "judul_umum_terkait",
+      "existing_ids": [
+        "math-26"
+      ],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "3.4",
+      "title": "Diferensiasi lanjutan",
+      "status": "judul_umum_terkait",
+      "existing_ids": [
+        "math-42"
+      ],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "3.5",
+      "title": "Integrasi lanjutan",
+      "status": "belum_tercantum",
+      "existing_ids": [],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "3.6",
+      "title": "Akar numerik lanjutan",
+      "status": "belum_tercantum",
+      "existing_ids": [],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "3.7",
+      "title": "Vektor",
+      "status": "belum_tercantum",
+      "existing_ids": [],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "3.8",
+      "title": "Persamaan diferensial",
+      "status": "belum_tercantum",
+      "existing_ids": [],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "3.9",
+      "title": "Bilangan kompleks",
+      "status": "belum_tercantum",
+      "existing_ids": [],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "4.1",
+      "title": "Gaya dan kesetimbangan",
+      "status": "belum_tercantum",
+      "existing_ids": [],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "4.2",
+      "title": "Kinematika satu dimensi",
+      "status": "belum_tercantum",
+      "existing_ids": [],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "4.3",
+      "title": "Momentum",
+      "status": "belum_tercantum",
+      "existing_ids": [],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "4.4",
+      "title": "Hukum Newton",
+      "status": "belum_tercantum",
+      "existing_ids": [],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "4.5",
+      "title": "Energi usaha daya",
+      "status": "belum_tercantum",
+      "existing_ids": [],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "5.1",
+      "title": "Representasi data",
+      "status": "judul_umum_terkait",
+      "existing_ids": [
+        "math-31",
+        "math-32"
+      ],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "5.2",
+      "title": "Susunan dan pemilihan",
+      "status": "judul_umum_terkait",
+      "existing_ids": [
+        "math-34"
+      ],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "5.3",
+      "title": "Peluang",
+      "status": "judul_umum_terkait",
+      "existing_ids": [
+        "math-33",
+        "math-34"
+      ],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "5.4",
+      "title": "Variabel acak diskret",
+      "status": "belum_tercantum",
+      "existing_ids": [],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "5.5",
+      "title": "Distribusi normal",
+      "status": "belum_tercantum",
+      "existing_ids": [],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "6.1",
+      "title": "Distribusi Poisson",
+      "status": "belum_tercantum",
+      "existing_ids": [],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "6.2",
+      "title": "Kombinasi variabel acak",
+      "status": "belum_tercantum",
+      "existing_ids": [],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "6.3",
+      "title": "Variabel acak kontinu",
+      "status": "belum_tercantum",
+      "existing_ids": [],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "6.4",
+      "title": "Sampel dan estimasi",
+      "status": "belum_tercantum",
+      "existing_ids": [],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    },
+    {
+      "syllabus": "9709",
+      "section": "6.5",
+      "title": "Pengujian hipotesis",
+      "status": "belum_tercantum",
+      "existing_ids": [],
+      "source": "https://www.cambridgeinternational.org/Images/697427-2026-2027-syllabus.pdf"
+    }
+  ]
+}

@@ -5,24 +5,113 @@
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "Referrer-Policy", "value": "no-referrer" },
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "DENY" }
+        {
+          "key": "Referrer-Policy",
+          "value": "no-referrer"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
+        }
       ]
     }
   ],
   "redirects": [
-    { "source": "/agenda", "destination": "/", "permanent": true },
-    { "source": "/index.html", "destination": "/", "permanent": true }
+    {
+      "source": "/agenda",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    }
   ],
   "rewrites": [
-    { "source": "/sign-in", "destination": "/auth.html" },
-    { "source": "/sign-up", "destination": "/auth.html" },
-    { "source": "/auth/verify", "destination": "/auth.html" },
-    { "source": "/dasbor", "destination": "/index.html" },
-    { "source": "/materi", "destination": "/index.html" },
-    { "source": "/tracker", "destination": "/index.html" },
-    { "source": "/tryout", "destination": "/index.html" },
-    { "source": "/panduan", "destination": "/index.html" }
+    {
+      "source": "/hari-ini",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/rencana",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/catatan",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/catatan-waktu",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/sign-in",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/sign-up",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/auth/verify",
+      "destination": "/auth.html"
+    },
+    {
+      "source": "/dasbor",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/materi",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/tracker",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/tryout",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/panduan",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/belajar",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/statistik",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/kalender",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/mata-pelajaran",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/pengaturan",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/akun",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/migrasi",
+      "destination": "/index.html"
+    }
   ]
 }

@@ -1,0 +1,79 @@
+{
+  "fixture": "synthetic ASCII UUID interval records; one subject; no personal data",
+  "browserVersion": "155.0.4283.62",
+  "storage": [
+    {
+      "intervals": 1000,
+      "documentBytes": 209110,
+      "requestBytes": 209183,
+      "cacheBytesUTF8": 418263,
+      "cloudLimitExceeded": false,
+      "pollDocumentBytesPerHour": 75279600,
+      "browser": {
+        "saved": true,
+        "characters": 418263
+      }
+    },
+    {
+      "intervals": 10000,
+      "documentBytes": 2054110,
+      "requestBytes": 2054183,
+      "cacheBytesUTF8": 4108263,
+      "cloudLimitExceeded": false,
+      "pollDocumentBytesPerHour": 739479600,
+      "browser": {
+        "saved": true,
+        "characters": 4108263
+      }
+    },
+    {
+      "intervals": 20000,
+      "documentBytes": 4104110,
+      "requestBytes": 4104183,
+      "cacheBytesUTF8": 8208263,
+      "cloudLimitExceeded": false,
+      "pollDocumentBytesPerHour": 1477479600,
+      "browser": {
+        "saved": false,
+        "error": "QuotaExceededError",
+        "characters": 8208263
+      }
+    },
+    {
+      "intervals": 30000,
+      "documentBytes": 6154110,
+      "requestBytes": 6154183,
+      "cacheBytesUTF8": 12308263,
+      "cloudLimitExceeded": true,
+      "pollDocumentBytesPerHour": 2215479600,
+      "browser": {
+        "saved": false,
+        "error": "QuotaExceededError",
+        "characters": 12308263
+      }
+    },
+    {
+      "intervals": 100000,
+      "documentBytes": 20504110,
+      "requestBytes": 20504183,
+      "cacheBytesUTF8": 41008263,
+      "cloudLimitExceeded": true,
+      "pollDocumentBytesPerHour": 7381479600,
+      "browser": {
+        "saved": false,
+        "error": "QuotaExceededError",
+        "characters": 41008263
+      }
+    }
+  ],
+  "schedule": {
+    "defaultSelectedWeek": 2,
+    "dayOneActualWeeks": [1],
+    "dayOneSessionIds": ["1-0"],
+    "agendaHTMLShowsWeekTwo": true
+  },
+  "unknownCatalogTopic": {
+    "accepted": false,
+    "errorKey": "error.backupFormat"
+  }
+}

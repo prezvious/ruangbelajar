@@ -1,53 +1,32 @@
 <!doctype html>
 <html lang="id">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f8f9f5">
-  <meta name="description" content="Agenda belajar untuk persiapan UTBK SNBT 2027. Pelajari materi dan pantau progres belajarmu.">
-  <title>Ruang Belajar &mdash; UTBK SNBT 2027</title>
-  <link rel="icon" type="image/svg+xml" sizes="any" href="/favicon.svg">
-  <script src="/themes.js"></script>
-  <link rel="stylesheet" href="/styles.css">
-  <link rel="stylesheet" href="/themes.css">
-  <link rel="stylesheet" href="/tracker.css">
-  <link rel="stylesheet" href="/auth.css">
-  <script src="/data.js" defer></script>
-  <script src="/icons.js" defer></script>
-  <script src="/tracker-data.js" defer></script>
-  <script src="/tracker.js" defer></script>
-  <script src="/app.js" defer></script>
-  <script src="/auth-client.js" defer></script>
-</head>
-<body>
-  <a class="skip-link" href="#main">Langsung ke agenda</a>
-  <aside class="sidebar" aria-label="Navigasi utama">
-    <a class="brand" href="/"><span>ruang<span class="brand-light">belajar</span></span></a>
-    <nav class="main-nav">
-      <a href="/dasbor" data-page="dasbor"><span data-icon="layout"></span>Dasbor</a>
-      <a href="/" data-page="agenda"><span data-icon="calendar"></span>Agenda belajar<span class="nav-dot" data-icon="dot" aria-hidden="true"></span></a>
-      <a href="/materi" data-page="materi"><span data-icon="library"></span>Semua materi</a>
-      <a href="/tracker" data-page="tracker"><span data-icon="check-circle"></span>Tracker materi</a>
-      <a href="/tryout" data-page="tryout"><span data-icon="flag"></span>Tryout</a>
-      <a href="/panduan" data-page="panduan"><span data-icon="compass"></span>Panduan awal</a>
-    </nav>
-    <div class="sidebar-bottom">
-      <div class="journey-heading"><span>Progres belajar</span><span id="total-percent">0%</span></div>
-      <progress id="total-progress" max="84" value="0" aria-label="Progres seluruh kurikulum"></progress>
-      <p id="total-count">0 dari 84 sesi selesai</p>
-      <a href="/tracker" class="tracker-shortcut" id="tracker-count">0 / 116 materi tuntas</a>
-      <a class="source-credit" href="/panduan">Kurikulum oleh TTL Indonesia<span data-icon="right"></span></a>
-    </div>
-    <div class="account-control" id="account-control"><a href="/sign-in">Masuk ke akun</a></div>
-  </aside>
-  <div class="workspace">
-    <header class="topbar"><div class="breadcrumb"><span data-icon="layout"></span><span>Ruang belajar</span><span class="breadcrumb-divider" data-icon="right" aria-hidden="true"></span><strong id="page-label">Agenda belajar</strong></div><label class="theme-control"><span>Warna</span><span class="theme-select-wrap"><select id="theme-select" aria-label="Kombinasi warna"><option value="olive">Olive</option><option value="ocean">Ocean</option><option value="terracotta">Terracotta</option><option value="plum">Plum</option></select><span class="theme-chevron" data-icon="right" aria-hidden="true"></span></span></label></header>
-    <main id="main" tabindex="-1">
-      <section class="intro" aria-labelledby="page-title"><div><h1 id="page-title">Agenda belajar</h1></div><a class="intro-link" href="/panduan">Mulai dari panduan<span data-icon="arrow-up-right"></span></a></section>
-      <div id="page-content"></div>
-    </main>
-  </div>
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <noscript><p class="noscript">Aktifkan JavaScript untuk menggunakan agenda, tracker materi, dan catatan tryout.</p></noscript>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f8f9f5" />
+    <meta
+      name="description"
+      content="Agenda, tracker materi, timer belajar, kalender, dan tryout untuk persiapan UTBK SNBT 2027."
+    />
+    <title>Ruang Belajar — Agenda belajar</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="stylesheet" href="/study/vendor/globals.css" />
+    <link rel="stylesheet" href="/study/vendor/redesign.css" />
+    <link rel="stylesheet" href="/study/vendor/interfaceStyles.css" />
+    <link rel="stylesheet" href="/study/workspace.css" />
+    <link rel="stylesheet" href="/study/academic.css" />
+    <script type="module" src="/study/app.mjs"></script>
+    <link rel="stylesheet" href="/study/learning.css" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <div id="toast" role="status" aria-live="polite"></div>
+    <dialog id="modal" aria-labelledby="modal-title"></dialog>
+    <noscript
+      ><p>
+        Aktifkan JavaScript untuk memakai agenda, tracker materi, timer, dan
+        catatan belajar.
+      </p></noscript
+    >
+  </body>
 </html>

@@ -1,0 +1,41 @@
+{
+  "proposals": 59,
+  "actions": {
+    "Tambah": 35,
+    "Rinci": 24
+  },
+  "proposal_groups": {
+    "N": 18,
+    "C": 30,
+    "E": 7,
+    "T": 4
+  },
+  "matrix": {
+    "9093": {
+      "rows": 6,
+      "broadRelated": 1,
+      "absent": 5
+    },
+    "9694": {
+      "rows": 15,
+      "broadRelated": 11,
+      "absent": 4
+    },
+    "9709": {
+      "rows": 38,
+      "broadRelated": 18,
+      "absent": 20
+    }
+  },
+  "drive_pdfs_read": 9,
+  "drive_pages_read": 41,
+  "all_drive_pages_rendered": true,
+  "relative_links_valid": true,
+  "active_entry": "index.html > study/app.mjs > study/academic-ui.mjs > study/catalog.mjs",
+  "active_matches_legacy_catalog": true,
+  "runtime_catalog_hashes": {
+    "study/catalog.mjs": "da6b1d3fb7638513939cb777cc021fadbf62f17a73988293971c007a3733b569",
+    "study/academic-ui.mjs": "e1a687227eb7811c9840f30e06275436202986476b4829de81af8f3306c6a257",
+    "index.html": "c4031f2d515303f2772dba74001155d1449c4cae1eb3027c1e9ae9f54ebb9c8a"
+  }
+}

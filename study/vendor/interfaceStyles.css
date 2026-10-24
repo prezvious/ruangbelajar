@@ -1,0 +1,335 @@
+/* The interface switch is independent of the 59 color themes and display mode. */
+.interface-style-field {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.interface-style-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.35rem;
+  padding: 0.28rem;
+  border: 1px solid var(--header-border);
+  border-radius: 0.8rem;
+  background: color-mix(in srgb, var(--header-surface) 74%, var(--header-control-surface));
+}
+
+.interface-style-button {
+  min-width: 0;
+  min-height: 2.75rem;
+  padding: 0.65rem 0.5rem;
+  border: 1px solid transparent;
+  border-radius: 0.6rem;
+  background: transparent;
+  color: var(--header-text-subtle);
+  font: 600 0.76rem/1.25 'Syne', sans-serif;
+  cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease, transform 150ms ease;
+}
+
+.interface-style-button:hover:not(:disabled) {
+  background: var(--header-control-surface);
+  border-color: var(--header-control-border);
+  color: var(--header-text);
+}
+
+.interface-style-button.is-active {
+  background: var(--surface-raised-strong);
+  border-color: var(--control-border);
+  color: var(--text-main);
+}
+
+.interface-style-button:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.interface-style-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.interface-style-hint {
+  margin: 0;
+  color: var(--header-text-subtle);
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+/* Interface B: material is derived from the selected appearance palette. */
+.app-shell[data-interface-style='opaline'] {
+  --surface-radius-lg: 1.8rem;
+  --surface-radius-md: 1.15rem;
+  --surface-radius-sm: 0.8rem;
+  --surface-outline: color-mix(in srgb, var(--line) 24%, transparent);
+  --surface-shadow-soft: 0 5px 13px color-mix(in srgb, var(--surface-shadow) 9%, transparent),
+    0 1px 2px color-mix(in srgb, var(--surface-shadow) 8%, transparent);
+  --surface-shadow-heavy: 0 18px 38px color-mix(in srgb, var(--surface-shadow) 12%, transparent),
+    0 3px 9px color-mix(in srgb, var(--surface-shadow) 8%, transparent);
+  --surface-shadow-inset: inset 0 1px 0 color-mix(in srgb, var(--surface-highlight) 72%, transparent);
+  --opaline-edge: color-mix(in srgb, var(--surface-highlight) 78%, transparent);
+  --opaline-accent-halo: color-mix(in srgb, var(--accent-main) 24%, transparent);
+  --opaline-positive: #b8e9c5;
+  --opaline-warning: #ffe5a3;
+  --opaline-danger: #f7bdc2;
+  background: radial-gradient(circle at 12% 0%, var(--glow-soft), transparent 40%),
+    linear-gradient(155deg, var(--paper), color-mix(in srgb, var(--paper) 82%, var(--paper-strong)));
+}
+
+.app-shell[data-interface-style='opaline'][data-resolved-mode='dark'] {
+  --opaline-positive: #66bc8d;
+  --opaline-warning: #d8ad60;
+  --opaline-danger: #d77b85;
+}
+
+.app-shell[data-interface-style='opaline']::before {
+  opacity: 0.35;
+}
+
+.app-shell[data-interface-style='opaline'] .site-header {
+  border-bottom: 1px solid var(--surface-outline);
+  box-shadow: 0 7px 25px color-mix(in srgb, var(--surface-shadow) 10%, transparent),
+    inset 0 1px 0 var(--opaline-edge);
+  backdrop-filter: none;
+}
+
+.app-shell[data-interface-style='opaline'][data-resolved-mode='light'] .site-header {
+  --header-text: var(--text-main);
+  --header-text-subtle: var(--text-subtle);
+  --header-text-accent: var(--text-accent);
+  --header-control-surface: var(--surface-raised-strong);
+  --header-control-border: var(--control-border);
+  --header-border: var(--surface-outline);
+  background: linear-gradient(165deg, var(--surface-highlight), var(--surface-raised-strong));
+}
+
+.app-shell[data-interface-style='opaline'][data-resolved-mode='dark'] .site-header {
+  background: linear-gradient(165deg, var(--header-surface-alt), var(--header-surface));
+}
+
+.app-shell[data-interface-style='opaline'] :is(.brand-chip, .site-nav, .site-nav-link, .site-utility-toggle, .user-pill, .status-badge, .hotkey-hint, .mode-pill, .verify-user-pill) {
+  border-radius: 999px;
+}
+
+.app-shell[data-interface-style='opaline'] :is(.site-nav, .site-utility-toggle, .brand-chip) {
+  box-shadow: var(--surface-shadow-inset), 0 4px 12px color-mix(in srgb, var(--surface-shadow) 10%, transparent);
+}
+
+.app-shell[data-interface-style='opaline'] .site-nav-link.is-active {
+  box-shadow: var(--surface-shadow-inset), 0 3px 10px color-mix(in srgb, var(--surface-shadow) 13%, transparent);
+}
+
+.app-shell[data-interface-style='opaline'] .site-footer {
+  border-top-color: var(--surface-outline);
+  background: color-mix(in srgb, var(--surface-raised-strong) 72%, transparent);
+}
+
+.app-shell[data-interface-style='opaline'] :is(.hero-panel, .panel, .summary-panel, .end-round-dialog) {
+  border: 1px solid var(--surface-outline);
+  border-radius: var(--surface-radius-lg);
+  background: linear-gradient(150deg, var(--surface-raised-strong), var(--surface-raised));
+  box-shadow: var(--surface-shadow-heavy), inset 0 1px 0 var(--opaline-edge);
+}
+
+.app-shell[data-interface-style='opaline'] :is(.hero-panel, .panel, .summary-panel)::before {
+  background: linear-gradient(180deg, var(--opaline-edge), transparent 30%);
+  opacity: 0.45;
+}
+
+.app-shell[data-interface-style='opaline'] .hero-panel::after {
+  width: 10rem;
+  height: 10rem;
+  top: -6rem;
+  right: -3rem;
+  border-radius: 50%;
+  border-color: var(--surface-outline);
+  background: radial-gradient(circle, var(--opaline-accent-halo), transparent 72%);
+  transform: none;
+}
+
+.app-shell[data-interface-style='opaline'] :is(.chalk-panel, .feedback.success, .verify-status.is-success) {
+  background: color-mix(in srgb, var(--opaline-positive) 25%, var(--surface-raised-strong));
+  border-color: color-mix(in srgb, var(--opaline-positive) 50%, var(--surface-outline));
+}
+
+.app-shell[data-interface-style='opaline'] :is(.warning-panel, .inline-warning, .feedback.warning, .verify-status.is-pending) {
+  background: color-mix(in srgb, var(--opaline-warning) 22%, var(--surface-raised-strong));
+  border-color: color-mix(in srgb, var(--opaline-warning) 45%, var(--surface-outline));
+}
+
+.app-shell[data-interface-style='opaline'] :is(.feedback.error, .feedback.danger, .end-round-dialog) {
+  border-color: color-mix(in srgb, var(--opaline-danger) 42%, var(--surface-outline));
+}
+
+.app-shell[data-interface-style='opaline'] :is(.feedback.success, .feedback.warning, .feedback.error, .feedback.danger, .inline-warning) {
+  position: relative;
+  padding-left: 3.1rem;
+}
+
+.app-shell[data-interface-style='opaline'] :is(.feedback.success, .feedback.warning, .feedback.error, .feedback.danger, .inline-warning)::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 1rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 1px solid var(--surface-outline);
+  border-radius: 50%;
+  background: var(--opaline-warning);
+  box-shadow: inset 0 1px 0 var(--opaline-edge), 0 2px 6px color-mix(in srgb, var(--surface-shadow) 12%, transparent);
+  transform: translateY(-50%);
+}
+
+.app-shell[data-interface-style='opaline'] .feedback.success::before {
+  background: var(--opaline-positive);
+}
+
+.app-shell[data-interface-style='opaline'] :is(.feedback.error, .feedback.danger)::before {
+  background: var(--opaline-danger);
+}
+
+.app-shell[data-interface-style='opaline'] :is(.hero-sidebar, .arena-idle-grid article, .solver-grid article, .summary-grid article, .operation-card, .attempt-list li, .mixed-config-row, .toggle-row, .table-wrap, .solver-result, .verify-status, .password-guidance) {
+  border: 1px solid var(--surface-outline);
+  border-radius: var(--surface-radius-md);
+  background: linear-gradient(160deg, var(--surface-raised-strong), var(--surface-raised));
+  box-shadow: var(--surface-shadow-soft), var(--surface-shadow-inset);
+}
+
+.app-shell[data-interface-style='opaline'] :is(.button, .mode-toggle-button, .practice-mode-option, .keypad-button, .password-toggle, .toggle-switch, .control-drawer-close, .site-utility-toggle) {
+  border-radius: 999px;
+  box-shadow: var(--surface-shadow-soft), var(--surface-shadow-inset);
+}
+
+.app-shell[data-interface-style='opaline'] :is(.button-strong, .mode-toggle-button.is-active, .keypad-button.submit) {
+  border-color: color-mix(in srgb, var(--accent-main) 68%, var(--line));
+  background: var(--accent-main);
+  color: var(--button-strong-text);
+  box-shadow: inset 0 2px 0 color-mix(in srgb, var(--surface-highlight) 36%, transparent),
+    inset 0 -3px 6px color-mix(in srgb, var(--surface-shadow) 17%, transparent),
+    0 6px 18px var(--opaline-accent-halo);
+}
+
+.app-shell[data-interface-style='opaline'] .button-danger {
+  background: var(--accent-alert);
+  border-color: color-mix(in srgb, var(--accent-alert) 70%, var(--line));
+}
+
+.app-shell[data-interface-style='opaline'] :is(.button-quiet, .keypad-button:not(.submit), .password-toggle, .control-drawer-close) {
+  border-color: var(--surface-outline);
+  background: linear-gradient(170deg, var(--surface-highlight), var(--surface-raised));
+}
+
+.app-shell[data-interface-style='opaline'] :is(.mode-toggle, .display-mode-options, .interface-style-options, .site-nav) {
+  border-radius: 999px;
+}
+
+.app-shell[data-interface-style='opaline'] :is(.practice-mode-option-mark, .theme-result-check) {
+  border-radius: 50%;
+  box-shadow: var(--surface-shadow-inset), 0 2px 6px color-mix(in srgb, var(--surface-shadow) 12%, transparent);
+}
+
+.app-shell[data-interface-style='opaline'] .practice-mode-option.is-active .practice-mode-option-mark {
+  background: var(--accent-main);
+  border-color: var(--accent-main);
+}
+
+.app-shell[data-interface-style='opaline'] :is(.settings-form input, .settings-form select, .answer-form input, .auth-form input, .mixed-answer-input, .theme-search-input) {
+  border: 1px solid var(--control-border);
+  border-radius: var(--surface-radius-md);
+  background: linear-gradient(180deg, var(--surface-input), var(--surface-raised-strong));
+  box-shadow: inset 0 2px 5px color-mix(in srgb, var(--surface-shadow) 7%, transparent),
+    inset 0 1px 0 var(--opaline-edge);
+}
+
+.app-shell[data-interface-style='opaline'] :is(.progress-track, .strength-track span) {
+  border-radius: 999px;
+  box-shadow: inset 0 1px 4px color-mix(in srgb, var(--surface-shadow) 13%, transparent);
+}
+
+.app-shell[data-interface-style='opaline'] :is(.progress-track span, .strength-track .is-pass) {
+  border-radius: 999px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent-main) 70%, var(--surface-highlight)), var(--accent-main));
+}
+
+.app-shell[data-interface-style='opaline'] :is(.arena-idle, .arena-problem-shell, .stacked-problem, .mixed-input-region, .mixed-progress-region) {
+  border-radius: var(--surface-radius-lg);
+}
+
+.app-shell[data-interface-style='opaline'] .stacked-problem {
+  border: 1px solid var(--surface-outline);
+  background: linear-gradient(165deg, var(--surface-raised-strong), var(--surface-raised));
+  box-shadow: inset 0 1px 0 var(--opaline-edge), var(--surface-shadow-soft);
+}
+
+.app-shell[data-interface-style='opaline'] :is(.stacked-problem.is-correct-flash, .stacked-problem-answer.correct-flash) {
+  background: color-mix(in srgb, var(--opaline-positive) 35%, var(--surface-raised-strong));
+}
+
+.app-shell[data-interface-style='opaline'] :is(.stacked-problem.is-incorrect-flash, .stacked-problem-answer.incorrect-flash) {
+  background: color-mix(in srgb, var(--opaline-danger) 32%, var(--surface-raised-strong));
+}
+
+.app-shell[data-interface-style='opaline'] .keypad-button {
+  border-radius: var(--surface-radius-md);
+}
+
+.app-shell[data-interface-style='opaline'] .keypad-button.submit {
+  border-radius: 999px;
+}
+
+.app-shell[data-interface-style='opaline'] .utility-drawer-shell {
+  border: 1px solid var(--surface-outline);
+  border-radius: var(--surface-radius-lg);
+  background: linear-gradient(160deg, var(--surface-raised-strong), var(--surface-raised));
+  box-shadow: 0 26px 60px color-mix(in srgb, var(--surface-shadow) 22%, transparent),
+    inset 0 1px 0 var(--opaline-edge);
+}
+
+.app-shell[data-interface-style='opaline'] .utility-drawer-shell {
+  --header-text: var(--text-main);
+  --header-text-subtle: var(--text-subtle);
+  --header-text-accent: var(--text-accent);
+  --header-control-surface: var(--surface-raised);
+  --header-control-border: var(--control-border);
+  --header-border: var(--surface-outline);
+}
+
+.app-shell[data-interface-style='opaline'] :is(.utility-section, .theme-summary-button, .theme-result-button, .shortcut-disclosure-button, .theme-browser-back, .interface-style-options, .display-mode-options) {
+  border-color: var(--surface-outline);
+  border-radius: var(--surface-radius-md);
+  background: linear-gradient(165deg, var(--surface-raised-strong), var(--surface-raised));
+  box-shadow: var(--surface-shadow-soft), var(--surface-shadow-inset);
+}
+
+.app-shell[data-interface-style='opaline'] :is(.display-mode-option, .interface-style-button, .command-desk-reset, .theme-result-check) {
+  border-radius: 999px;
+}
+
+.app-shell[data-interface-style='opaline'] :is(.display-mode-option.is-active, .interface-style-button.is-active, .theme-result-button.is-selected) {
+  background: var(--surface-selected);
+  border-color: var(--control-border);
+  color: var(--text-main);
+  box-shadow: inset 0 1px 0 var(--opaline-edge), 0 3px 9px color-mix(in srgb, var(--surface-shadow) 10%, transparent);
+}
+
+.app-shell[data-interface-style='opaline'] :is(.button, .mode-toggle-button, .practice-mode-option, .keypad-button, .interface-style-button) {
+  transition-duration: 140ms;
+}
+
+.app-shell[data-interface-style='opaline'] :is(.button, .mode-toggle-button, .practice-mode-option, .keypad-button, .interface-style-button):active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: inset 0 2px 5px color-mix(in srgb, var(--surface-shadow) 16%, transparent);
+}
+
+@media (max-width: 420px) {
+  .interface-style-options {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .interface-style-button,
+  .app-shell[data-interface-style='opaline'] :is(.button, .mode-toggle-button, .practice-mode-option, .keypad-button) {
+    transition: none;
+  }
+}

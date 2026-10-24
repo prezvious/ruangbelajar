@@ -1,192 +1,143 @@
 # Ruang Belajar
 
-**Agenda belajar, tracker materi, dan catatan tryout untuk persiapan UTBK SNBT 2027.**
+Agenda, tracker materi, timer, tugas, kalender, statistik, dan catatan tryout untuk persiapan UTBK SNBT 2027.
 
-Ruang Belajar menyatukan jadwal dan progres belajar dalam satu aplikasi web ringan.
-Materi tersusun per minggu, setiap submateri memiliki tahap Belajar, Latihan, dan
-Review, sementara hasil tryout dapat dicatat untuk melihat perkembangan nilai.
+## Penambahan fitur baru
 
-Dibangun dengan **HTML, CSS, dan JavaScript biasa**, tanpa framework atau proses
-build. Autentikasi memakai **Supabase Auth** melalui Vercel Function Node.js.
-Progres belajar tetap disimpan di browser melalui `localStorage`.
-
-## Sekilas
-
-| Agenda | Tracker | Tahap belajar | Pilihan warna |
-| --- | --- | --- | --- |
-| 12 minggu / 84 sesi | 116 submateri | 348 tahap | 4 palet |
+- **Hari ini dan tertinggal:** antrean sesi, tugas, dan rutinitas yang perlu dikerjakan.
+- **Rencana kapasitas:** atur waktu tersedia, estimasi durasi, lalu tinjau jadwal sebelum menerapkannya.
+- **Catatan dan sumber:** simpan catatan Markdown atau TXT serta referensi pribadi per topik.
+- **Catatan waktu:** koreksi durasi dengan alasan, riwayat perubahan, serta pengarsipan dan pemulihan catatan.
+- **Rutinitas dan pengingat:** tugas berulang, pengingat dalam aplikasi, dan ekspor kalender.
+- **Sinkronisasi akun:** penyimpanan per akun, pemulihan koneksi, serta penanganan konflik perubahan antarperangkat.
+- **Pengaturan profil dan target:** ubah nama, kampus, jurusan, dan target selesai belajar melalui Settings. Dasbor hanya menampilkan ringkasan **Profil & target**, tanpa garis pemisah atau breadcrumb.
+- **Pilihan tampilan:** 63 palet warna, mode terang/gelap/sistem, dua gaya antarmuka, serta enam pilihan bahasa.
 
 ## Fitur
 
-- **Agenda mingguan** — pilih minggu dan hari, lihat topik beserta referensinya,
-  tandai sesi selesai, dan tampilkan hanya sesi yang belum selesai.
-- **Dasbor belajar** — ringkasan progres, capaian per subtes, profil, tujuan
-  perguruan tinggi dan jurusan, serta target tanggal selesai belajar.
-- **Pencarian materi** — temukan topik berdasarkan nama materi, subtes, atau minggu.
-- **Tracker materi** — catat Belajar, Latihan, dan Review secara terpisah;
-  filter berdasarkan subtes, kata kunci, dan status ketuntasan.
-- **Riwayat tryout** — tambah, edit, dan hapus hasil dengan konfirmasi;
-  lihat grafik hingga 12 hasil terakhir dari nilai yang benar-benar dicatat.
-- **Panduan awal** — referensi cara belajar, jalur masuk perguruan tinggi,
-  KIP Kuliah, dan penggunaan tracker.
-- **Tampilan responsif** — empat palet warna: Olive, Ocean, Terracotta, dan Plum;
-  pilihan warna tersimpan untuk kunjungan berikutnya.
-- **URL bersih** — navigasi berbasis path, tautan langsung ke halaman, dan
-  dukungan tombol Back/Forward browser tanpa `#agenda`.
+| Area | Fitur |
+| --- | --- |
+| Agenda | Kurikulum TTL Indonesia 12 minggu / 84 sesi, tanggal mulai yang dapat diatur, tanggal per sesi, referensi, dan filter belum selesai. |
+| Materi | Pencarian sesi, subtes, topik, dan referensi literasi. |
+| Tracker | 116 materi unik dengan 348 tahap Belajar/Latihan/Review; 12 materi PK/PM memakai progres bersama. |
+| Timer | Mulai, jeda, lanjut, selesai, mode fokus, pulih setelah refresh, tampil selama navigasi, dan terhubung ke sesi/materi. |
+| Tugas dan kalender | Tugas bertanggal, rutinitas, edit/selesai/hapus, kalender waktu belajar, serta agenda dan tugas pada tanggal pilihan. |
+| Statistik | Durasi harian/mingguan/bulanan, rata-rata, distribusi mata pelajaran, streak, fokus terlama, heatmap, dan riwayat. |
+| Mata pelajaran | Tambah, edit nama/warna, arsip/pulihkan, total durasi, serta pemetaan ke subtes UTBK. |
+| Profil dan target | Ringkasan nama, kampus, jurusan, dan target selesai di Dasbor; pengeditan dan penyimpanan di Settings. |
+| Tryout | Hasil tujuh subtes, edit/hapus, dan grafik 12 hasil terakhir. |
+| Akun | Daftar/masuk/verifikasi/reset sandi, cookie HttpOnly, cache per akun, sinkronisasi otomatis, dan penanganan konflik. |
+| Data | Ekspor/impor cadangan JSON, pratinjau sebelum penerapan, cadangan otomatis, deduplikasi impor, dan pemulihan lokal. |
+| Tampilan | 63 palet, mode terang/gelap/sistem, Studio/Opaline, bahasa Indonesia, Inggris UK/US, Spanyol, Prancis, dan Rusia. |
 
-## Menjalankan Secara Lokal
+Waktu timer, penyelesaian agenda, dan tahap materi merupakan catatan terpisah. Menyelesaikan timer tidak otomatis menandai materi tuntas. Rata-rata tujuh nilai tryout bukan skor gabungan resmi UTBK. Konten kurikulum dan nama materi asli tetap dalam bahasa sumber.
 
-Prasyarat: **Node.js 22+ dan npm**. Tidak ada dependensi yang perlu diinstal.
+Tanggal mulai adalah tanggal sesi pertama minggu 1. Ke-84 sesi mengikuti tanggal tersebut secara berurutan. Tanggal khusus per sesi mengesampingkan perhitungan awal; mengubah tanggal mulai tidak menghapus progres atau tanggal khusus. Aplikasi tidak mengasumsikan tanggal ujian resmi.
 
-~~~sh
-git clone https://github.com/prezvious/ruangbelajar.git
-cd ruangbelajar
-cp .env.example .env.local
-# Isi AUTH_COOKIE_SECRET di .env.local dengan string acak minimal 32 karakter.
+## Menjalankan secara lokal
+
+Prasyarat: **Node.js 22+**. Salin `.env.example` menjadi `.env.local`, lalu isi konfigurasi sesuai [AUTH.md](AUTH.md), termasuk `AUTH_COOKIE_SECRET` minimal 32 karakter.
+
+```sh
+npm ci
 npm run dev
-~~~
+```
 
-Buka **http://localhost:5174**. Server lokal melayani halaman aplikasi dan
-`/api/auth`; server statis seperti `serve` tidak menjalankan API autentikasi.
-Panduan konfigurasi dan pengujian email tersedia di [AUTH.md](AUTH.md).
+Buka [localhost:5174](http://localhost:5174). Server lokal diperlukan agar autentikasi dan sinkronisasi API berjalan. Membuka HTML melalui `file://` tidak didukung.
 
-> Gunakan server HTTP, bukan membuka `index.html` melalui `file://`.
-> Navigasi berbasis path memerlukan server yang melayani halaman aplikasi.
+Tidak diperlukan build frontend atau koneksi CDN JavaScript. Runtime Markdown dan sanitizer disertakan dari versi dependency yang dikunci; `npm run vendor:check` memeriksa kesesuaian berkasnya.
 
-## Mulai Menggunakan
+## Akun dan sinkronisasi
 
-1. Buka **Dasbor**, lalu isi profil dan target belajar jika diperlukan.
-2. Pilih sesi di **Agenda belajar**, buka referensinya, lalu tandai sesi selesai.
-3. Gunakan **Tracker materi** untuk mencatat tahap belajar setiap submateri.
-4. Tambahkan hasil di **Tryout** untuk memantau perkembangan tujuh subtes.
+Untuk mengaktifkan sinkronisasi, jalankan [supabase-schema.sql](supabase-schema.sql) pada SQL Editor proyek Supabase yang digunakan aplikasi. Tabel `ruang_workspaces` memakai RLS dan revisi untuk mencegah penimpaan perubahan. Konfigurasi environment, cookie, dan callback email dijelaskan di [AUTH.md](AUTH.md). Skema SQL perlu diterapkan secara terpisah pada lingkungan produksi.
 
-Agenda pertama kali menampilkan **minggu 2**, yaitu awal kurikulum utama.
-Minggu 1 tetap tersedia untuk pendahuluan. Nomor minggu bukan perhitungan
-minggu kalender, dan agenda tidak menetapkan durasi atau tanggal ujian.
+Sesi akun memakai cookie terenkripsi HttpOnly, SameSite=Lax, dan Secure pada Vercel. Token autentikasi tidak disimpan dalam localStorage atau cadangan. Durasi sesi adalah 6 bulan kalender atau 12 bulan dengan pilihan **Ingat saya**.
 
-## Halaman Dan URL
+Data tamu tidak otomatis masuk ke akun. Gunakan **Akun → Tambahkan catatan tamu** untuk menambahkannya. Untuk memulihkan cadangan JSON, buka **Migrasi data**, pilih berkas, lalu periksa pratinjau sebelum menerapkannya. Cadangan data saat ini diunduh sebelum penerapan.
 
-| Path | Halaman |
+## Halaman
+
+| Path | Isi |
 | --- | --- |
 | `/` | Agenda belajar |
-| `/dasbor` | Ringkasan progres, profil, dan target |
-| `/materi` | Pencarian seluruh materi |
-| `/tracker` | Tracker tahap belajar |
-| `/tryout` | Riwayat dan grafik hasil tryout |
-| `/panduan` | Referensi pendahuluan dan petunjuk penggunaan |
-| `/sign-in` | Masuk dengan email dan kata sandi |
-| `/sign-up` | Daftar dengan nama lengkap, email, dan kata sandi |
-| `/auth/verify` | Konfirmasi email dari tautan Supabase dan kirim ulang tautan |
+| `/hari-ini` | Antrean hari ini dan tertinggal, tugas, dan rutinitas |
+| `/rencana` | Kapasitas, estimasi, pratinjau, dan penerapan jadwal |
+| `/catatan` | Catatan dan sumber pribadi Markdown/TXT per topik |
+| `/catatan-waktu` | Koreksi, riwayat perubahan, pengarsipan, dan pemulihan waktu |
+| `/dasbor` | Ringkasan profil dan target selesai belajar |
+| `/materi` | Materi dan referensi |
+| `/tracker?subject=PK` | Tracker dengan filter subtes opsional |
+| `/tryout` | Hasil dan grafik tryout |
+| `/belajar` | Timer, tugas, dan ringkasan hari ini |
+| `/statistik` | Statistik dan riwayat waktu |
+| `/kalender` | Kalender waktu dan rencana belajar |
+| `/mata-pelajaran` | Kelola mata pelajaran dan pemetaan subtes |
+| `/pengaturan` | Profil dan target, tampilan, bahasa, target harian, ekspor/impor, dan akun |
+| `/akun`, `/sign-in`, `/sign-up` | Pengelolaan akun |
+| `/auth/verify` | Callback verifikasi/reset sandi |
+| `/migrasi` | Impor cadangan dan pemetaan subtes |
+| `/panduan` | Panduan dan sumber kurikulum |
 
-Tautan `/tracker?subject=PK` membuka tracker dengan filter Pengetahuan
-Kuantitatif. Filter menggunakan query parameter, bukan hash.
-Tautan lama seperti `/#tracker?subject=PK` otomatis diganti menjadi path
-baru saat aplikasi dibuka. `/agenda` dan `/index.html` diarahkan ke `/`.
-Tautan aksesibilitas `#main` tetap digunakan untuk melompat ke konten utama;
-ini bukan routing halaman dan tidak ditambahkan ke URL ketika diklik.
+Tautan berbasis hash diterjemahkan ke path; `/agenda` dan `/index.html` diarahkan ke `/`. Back/Forward, tautan langsung, dan refresh dilayani server lokal serta rewrite Vercel.
 
-## Deploy Ke Vercel
+## Penyimpanan dan pemulihan
 
-1. Push proyek ke GitHub, lalu pilih **Add New Project** di Vercel.
-2. Impor repository **prezvious/ruangbelajar**.
-3. Pilih **Framework Preset: Other** dan **Root Directory: `.`**.
-4. Biarkan **Build Command** kosong dan gunakan direktori proyek (`.`)
-   sebagai **Output Directory**. Vercel menjalankan `api/auth.js` sebagai Function.
-5. Tambahkan `AUTH_COOKIE_SECRET` dan `PUBLIC_SITE_URL` pada environment Vercel,
-   lalu atur redirect Supabase sesuai [AUTH.md](AUTH.md).
-6. Klik **Deploy**.
+Workspace dan cache akun disimpan di IndexedDB `ruang-workspaces`. Pilihan bahasa dan petunjuk akun terakhir disimpan dalam localStorage; petunjuk akun tidak berisi token. Akses server tetap memerlukan cookie yang valid.
 
-Konfigurasi `vercel.json` menyertakan rewrite untuk halaman aplikasi dan akun,
-sehingga tautan langsung serta refresh tetap memuat dokumen yang sesuai.
-Aset CSS, JavaScript, dan favicon memakai path absolut dari root domain.
-Proyek ditujukan untuk root domain, bukan subfolder seperti `/aplikasi/`.
+Perubahan antar-tab memakai transaksi IndexedDB dan Web Locks bila tersedia. Sepuluh snapshot lokal per workspace melindungi penghapusan, penggantian data, dan perubahan jadwal. Polling revisi setiap 60 detik dikoordinasikan antar-tab. Perubahan yang belum tersinkron tetap tersedia setelah keluar dan dicoba kembali saat akun yang sama dibuka.
 
-Sesudah deploy, periksa `/tracker?subject=PK` dan refresh halaman tersebut.
-Alamat produksi mengikuti domain yang diberikan atau dikonfigurasi di Vercel;
-repository ini tidak menetapkan domain produksi tertentu.
+Jika permintaan akun gagal karena koneksi, cache akun terakhir dapat dibuka selama petunjuk sesinya belum kedaluwarsa. Keluar menghapus petunjuk ini. Draf formulir dibuang ketika workspace/akun berubah. Perubahan pada kolom yang sama dari tab berbeda memerlukan pemeriksaan; perubahan pada kolom berbeda dapat digabung.
 
-## Penyimpanan Dan Privasi
+Waktu yang melintasi tengah malam dibagi menurut tanggal lokal. Jeda tidak dihitung; fokus terlama memakai satu segmen tanpa jeda. Timer menyinkronkan timestamp, bukan mengunggah data setiap detik. Perangkat membutuhkan jam yang benar dan koneksi untuk menyimpan ke server.
 
-Progres belajar disimpan di **browser dan origin yang sama**, bukan di server.
-Akun tersedia melalui Supabase, tetapi belum menyinkronkan progres antarperangkat
-atau memisahkan progres lokal berdasarkan akun. Jangan gunakan browser bersama
-untuk menyimpan profil atau hasil belajar yang bersifat pribadi.
+Impor lokal dibatasi 128 MiB, 100 mata pelajaran, 20.000 tugas, 100.000 interval waktu, dan 20.000 tryout. Workspace akun dibatasi 3 MiB JSON UTF-8 kanonis, dengan body API maksimal 4 MiB. Impor akun memeriksa kapasitas sebelum penerapan.
 
-Sesi akun memakai cookie terenkripsi `HttpOnly`, `SameSite=Lax`, dan `Secure`
-di Vercel. Batas absolut sesi adalah **6 bulan kalender**, atau **12 bulan** jika
-**Remember me** dicentang; refresh token tidak memperpanjang batas tersebut.
-Penghapusan cookie, kebijakan browser, pencabutan sesi, atau pengaturan Supabase
-dapat membuat pengguna keluar lebih awal. Token tidak disimpan di localStorage.
+Jika penyimpanan browser penuh atau ditolak, aplikasi meminta ekspor. Simpan cadangan sebelum menutup tab. Belum ada service worker atau jaminan aplikasi dapat dimuat offline. Data lokal terkait alamat situs; cadangkan sebelum menghapus data situs atau mengganti alamat aplikasi.
 
-| Kunci localStorage | Isi |
-| --- | --- |
-| `ruang-belajar-v1` | Minggu pilihan dan sesi agenda yang selesai |
-| `ruang-belajar-tracker-v1` | Profil, progres tahap materi, dan hasil tryout |
-| `ruang-belajar-theme-v1` | Pilihan palet warna |
+## Pengujian
 
-- Menghapus data situs/browser dapat menghapus progres. Fitur ekspor/impor
-  cadangan belum tersedia.
-- Data di localhost tidak otomatis berpindah ke domain Vercel. Domain preview,
-  domain produksi, serta browser berbeda mempunyai penyimpanan terpisah.
-- Menyelesaikan sesi agenda **tidak otomatis** menyelesaikan tahap pada tracker.
-- Dua belas materi gabungan PK/PM memakai progres bersama agar tidak dihitung ganda.
-- Jika browser menolak penyimpanan, perubahan tidak dapat diandalkan untuk
-  kunjungan berikutnya.
-- Font dimuat dari Google Fonts dan tautan materi mengarah ke layanan eksternal.
-  Aplikasi belum memiliki service worker; jangan menganggapnya sepenuhnya offline.
-  Font memakai fallback jika koneksi font gagal.
+```sh
+npm run vendor:check
+npm run format:check
+npm test
+npm run test:database
+npm run test:http
+npm run test:browser
+node tests/browser.test.mjs
+node tests/account-browser.test.mjs
+node tests/audit-browser.test.mjs
+node tests/support-browser.test.mjs
+```
 
-## Sumber Dan Catatan Akademik
+Playwright terpasang melalui npm. Pada Linux/CI, jalankan `npx playwright install --with-deps chromium` sebelum tes browser. Pada Windows, tes memakai Edge secara default; `PW_CHANNEL` dapat mengubah kanal.
 
-Agenda menggunakan kurikulum **TTL Indonesia untuk persiapan SNBT 2027**,
-dengan 37 URL referensi asli tetap dipertahankan. Tracker berasal dari delapan
-ekspor HTML sumber berlabel **SNBT 2026**, lalu digabung ke `tracker-data.js`.
-Berkas ekspor mentah tidak diperlukan untuk menjalankan aplikasi.
+Suite mencakup timer dan batas hari, transaksi antar-tab, cadangan besar, impor idempoten, progres PK/PM, konflik perubahan, isolasi akun, offline/reconnect, validasi API, cookie, database, serta enam katalog bahasa. Tes browser memakai server dan akun tiruan, memeriksa alur fitur pada desktop dan ponsel, serta tidak mengubah data produksi.
 
-Tanggal target lama tidak diimpor; pengguna menentukan targetnya sendiri.
-Riwayat tryout dimulai kosong, tanpa nilai contoh. **Rata-rata tujuh subtes
-bukan skor gabungan resmi UTBK.** Materi dan tautan sumber adalah referensi
-belajar, bukan pengumuman resmi jadwal atau ketentuan seleksi.
+Pengujian stres mencakup 1.800 aksi timer, 144 kasus cadangan buatan, serta penghitung menit pembanding di tujuh zona waktu. Pengujian HTTP mencakup batas paket UTF-8, encoding rusak, dan unggahan terputus. GitHub Actions menjalankan pemeriksaan otomatis pada push dan pull request.
 
-## Struktur Proyek
+Gunakan `npm run format` untuk merapikan sumber aktif. Berkas vendor dan data kurikulum sumber tidak diformat ulang.
 
-| Berkas | Fungsi |
-| --- | --- |
-| `index.html` | Kerangka halaman dan navigasi |
-| `app.js` | Routing, agenda, pencarian, dan progres sesi |
-| `data.js` | Kurikulum agenda dan referensi literasi |
-| `tracker.js` | Dasbor, profil, tracker materi, dan tryout |
-| `tracker-data.js` | Submateri, kelompok, referensi, dan asal data |
-| `styles.css`, `tracker.css` | Layout responsif dan tampilan fitur |
-| `themes.js`, `themes.css` | Pilihan, penyimpanan, dan token palet warna |
-| `icons.js`, `favicon.svg` | Ikon Lucide lokal dan ikon situs |
-| `vercel.json` | Rewrite dan redirect untuk clean URL |
-| `auth.html`, `auth-page.js`, `auth.css` | Halaman masuk, daftar, dan verifikasi |
-| `auth-client.js` | Klien API akun dan kontrol sesi di browser |
-| `api/auth.js` | API Supabase dan cookie sesi terenkripsi |
-| `dev-server.js` | Server development lokal dengan API autentikasi |
-| `AUTH.md`, `.env.example` | Panduan dan contoh konfigurasi autentikasi |
-| `DESIGN.md` | Arah visual dan panduan desain |
-| `third_party/` | Lisensi aset pihak ketiga |
+## Struktur
 
-## Kontribusi
+- `study/app.mjs`: shell, navigasi, timer, tugas, statistik, mata pelajaran, dan akun.
+- `study/academic-ui.mjs`, `academic-model.mjs`, `catalog.mjs`: agenda, materi, tracker, ringkasan profil, tryout, dan jadwal.
+- `study/profile-settings.mjs`: formulir profil dan target, validasi, serta penyimpanan dari Settings.
+- `study/core.mjs`, `migration.mjs`, `repository.mjs`: skema data, waktu, validasi, impor, transaksi IndexedDB, dan pemulihan.
+- `study/learning-model.mjs`, `learning-ui.mjs`, `calendar-export.mjs`: antrean, kapasitas, koreksi, catatan/sumber, rutinitas, dan pengingat.
+- `study/sync.mjs`, `cloud.mjs`: rekonsiliasi dan transport API dengan cookie.
+- `study/http.mjs`, `forms.mjs`, `support-pages.mjs`: pesan API, validasi formulir, verifikasi email, dan halaman kesalahan.
+- `study/locales/`, `academic-locales.mjs`, `learning-locales.mjs`, `themes.mjs`, `vendor/`: bahasa, palet, dan aset tampilan.
+- `api/auth.js`, `api/workspace.js`: autentikasi server dan penyimpanan akun.
+- `supabase-schema.sql`, `supabase/migrations/`: skema database dan migrasi SQL.
+- `tests/`, `.github/workflows/checks.yml`: pengujian dan integrasi berkelanjutan.
+- `dev-server.js`, `vercel.json`: rute lokal dan deployment.
 
-Perubahan dapat diajukan melalui issue atau pull request. Untuk perubahan routing,
-periksa navigasi menu, Back/Forward, pembukaan tautan langsung, refresh halaman,
-dan filter subtes. Untuk perubahan data, pertahankan asal sumber serta konsistensi
-jumlah sesi, submateri, dan progres bersama PK/PM.
+Entry point aplikasi adalah `study/app.mjs`. Berkas JavaScript/CSS generasi sebelumnya dipertahankan sebagai referensi.
 
-Tidak ada test runner atau build pipeline yang dikonfigurasi. Pemeriksaan sintaks
-JavaScript dapat dijalankan dengan `node --check app.js` dan
-`node --check tracker.js`, lalu lanjutkan pengujian melalui browser.
+## Deploy
 
-## Lisensi Dan Kredit
+Impor repositori ke Vercel dengan preset **Other**, tanpa build, dan output root `.`. Atur environment sesuai [AUTH.md](AUTH.md), jalankan SQL pada Supabase, dan pastikan redirect email mengizinkan domain produksi beserta `/auth/verify`. Periksa login, sinkronisasi dua perangkat, tautan langsung, dan refresh setelah deploy.
 
-Kode proyek menggunakan [Lisensi MIT](LICENSE).
-Kurikulum dan referensi belajar dikreditkan kepada **TTL Indonesia**; lisensi kode
-proyek tidak dimaksudkan untuk melisensikan ulang materi milik pihak ketiga.
+## Sumber dan lisensi
 
-Ikon memakai koleksi [Lucide melalui Iconify](https://icon-sets.iconify.design/lucide/),
-disimpan lokal tanpa CDN runtime. Lisensi upstream tersedia di
-[third_party/lucide-LICENSE](third_party/lucide-LICENSE).
-Tipografi menggunakan **DM Sans** dan **Lora** dari Google Fonts.
+Kurikulum dan referensi dikreditkan kepada TTL Indonesia. Lisensi kode aplikasi tersedia di [LICENSE](LICENSE). Katalog 59 tema dan tiga CSS vendor bersumber dari `mental-math-trainer`; teks lisensi GPLv3 dipertahankan dalam [lisensi tema](third_party/SELA-THEME-LICENSE). Ikon Lucide memakai [lisensi upstream](third_party/lucide-LICENSE). Lisensi Markdown dan sanitizer disertakan di `study/lib/`. Kredit dan lisensi masing-masing sumber tetap disertakan dalam distribusi.
